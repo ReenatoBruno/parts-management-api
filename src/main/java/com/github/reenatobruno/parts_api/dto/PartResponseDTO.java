@@ -17,7 +17,7 @@ public class PartResponseDTO {
     @Schema(description = "Part Number", example = "ABC-123")
     private String partNumber;
 
-    @Schema(description = "Part Description", example = "Steel bolt")
+    @Schema(description = "Part Name", example = "Steel bolt")
     private String name;
 
     @Schema(description = "Part Price", example = "9.99" )
@@ -35,7 +35,7 @@ public class PartResponseDTO {
     @Schema(description = "Date when part was created", example = "2024-01-15T10:30:00")
     private LocalDateTime createdAt;
 
-    @Schema(description = "Date when part was last updated")
+    @Schema(description = "Date when part was last updated", example = "2024-01-15T10:30:00")
     private LocalDateTime updatedAt;
 
 }
