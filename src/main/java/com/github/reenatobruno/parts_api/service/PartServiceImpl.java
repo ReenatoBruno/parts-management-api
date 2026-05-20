@@ -58,12 +58,10 @@ public class PartServiceImpl implements PartService{
                 request.getPrice(),
                 request.getQuantity(),
                 request.getSupplier(),
-                request.getSupplier()
+                request.getDescription()
         );
 
-        Part updated = repository.save(existingPart);
-
-        return mapper.toResponseDTO(updated);
+        return mapper.toResponseDTO(existingPart);
     }
 
     @Override

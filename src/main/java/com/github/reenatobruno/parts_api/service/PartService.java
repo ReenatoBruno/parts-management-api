@@ -8,8 +8,12 @@ import org.springframework.data.domain.Pageable;
 public interface PartService {
 
     PartResponseDTO create(PartRequestDTO request);
+
     Page<PartResponseDTO> getAll(Pageable pageable);
+
     PartResponseDTO getById(Long id);
+
     PartResponseDTO update(Long id, PartRequestDTO request);
+
     void delete(Long id);
 }
