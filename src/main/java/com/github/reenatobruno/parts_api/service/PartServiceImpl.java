@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartServiceImpl implements PartService{
+public class PartServiceImpl implements PartService {
 
     private final PartRepository repository;
     private final PartMapper mapper;
@@ -26,6 +26,9 @@ public class PartServiceImpl implements PartService{
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
+        if (repository.existsByPartNumber(request.getPartNumber())) {
+            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
+        }
         Part part = mapper.toEntity(request);
         Part saved = repository.save(part);
         return mapper.toResponseDTO(saved);
@@ -51,7 +54,10 @@ public class PartServiceImpl implements PartService{
     public PartResponseDTO update(Long id, PartRequestDTO request) {
         Part existingPart = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
-
+        if (!existingPart.getPartNumber().equals(request.getPartNumber())
+                && repository.existsByPartNumber(request.getPartNumber())) {
+            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
+        }
         existingPart.updateFields(
                 request.getPartNumber(),
                 request.getName(),
