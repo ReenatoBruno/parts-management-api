@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartServiceImpl implements PartService{
+public class PartServiceImpl implements PartService {
 
     private final PartRepository repository;
     private final PartMapper mapper;
@@ -26,6 +26,9 @@ public class PartServiceImpl implements PartService{
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
+        if (repository.existsByPartNumber(request.getPartNumber())) {
+            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
+        }
         Part part = mapper.toEntity(request);
         Part saved = repository.save(part);
         return mapper.toResponseDTO(saved);
@@ -43,15 +46,18 @@ public class PartServiceImpl implements PartService{
     public PartResponseDTO getById(Long id) {
         return repository.findById(id)
                 .map(mapper::toResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Part not found with ID: \{id}"));
+                .orElseThrow(() -> new ResourceNotFoundException("Part not found with ID: " + id));
     }
 
     @Override
     @Transactional
     public PartResponseDTO update(Long id, PartRequestDTO request) {
         Part existingPart = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Cannot update. Part not found with ID: \{id}"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
+        if (!existingPart.getPartNumber().equals(request.getPartNumber())
+                && repository.existsByPartNumber(request.getPartNumber())) {
+            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
+        }
         existingPart.updateFields(
                 request.getPartNumber(),
                 request.getName(),
@@ -67,9 +73,8 @@ public class PartServiceImpl implements PartService{
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(STR."Cannot delete. Part not found with ID: \{id}");
-        }
-        repository.deleteById(id);
+        Part part = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id));
+        repository.delete(part);
     }
 }
