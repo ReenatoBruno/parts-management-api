@@ -67,9 +67,8 @@ public class PartServiceImpl implements PartService{
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id);
-        }
-        repository.deleteById(id);
+        Part part = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id));
+        repository.delete(part);
     }
 }
