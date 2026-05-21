@@ -43,14 +43,14 @@ public class PartServiceImpl implements PartService{
     public PartResponseDTO getById(Long id) {
         return repository.findById(id)
                 .map(mapper::toResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Part not found with ID: \{id}"));
+                .orElseThrow(() -> new ResourceNotFoundException("Part not found with ID: " + id));
     }
 
     @Override
     @Transactional
     public PartResponseDTO update(Long id, PartRequestDTO request) {
         Part existingPart = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Cannot update. Part not found with ID: \{id}"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
 
         existingPart.updateFields(
                 request.getPartNumber(),
@@ -68,7 +68,7 @@ public class PartServiceImpl implements PartService{
     @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(STR."Cannot delete. Part not found with ID: \{id}");
+            throw new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id);
         }
         repository.deleteById(id);
     }
