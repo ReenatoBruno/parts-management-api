@@ -15,7 +15,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/parts")
-public class PartController {
+public class PartController implements PartControllerOpenApi {
 
     private final PartService partService;
 
