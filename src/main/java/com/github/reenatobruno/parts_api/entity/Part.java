@@ -76,4 +76,14 @@ public class Part {
         public void setDescription(String description) {
                 this.description = PartDomainValidation.requireNonBlankOrNull(description, "Description");
         }
+
+        public void updateFields(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
+
+                setPartNumber(partNumber);
+                setName(name);
+                setPrice(price);
+                setQuantity(quantity);
+                setSupplier(supplier);
+                setDescription(description);
+        }
 }
