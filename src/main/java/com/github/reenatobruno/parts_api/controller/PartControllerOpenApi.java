@@ -2,6 +2,7 @@ package com.github.reenatobruno.parts_api.controller;
 
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
+import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,7 +38,7 @@ public interface PartControllerOpenApi {
             @ApiResponse(responseCode = "400", description = "Invalid data provided in request body"),
             @ApiResponse(responseCode = "404", description = "Part not found for update")
     })
-    ResponseEntity<PartResponseDTO> update(Long id, PartRequestDTO request);
+    ResponseEntity<PartResponseDTO> update(Long id, PartUpdateDTO request);
 
     @Operation(summary = "Delete a part by ID", description = "Permanently removes a part from the database")
     @ApiResponses(value = {

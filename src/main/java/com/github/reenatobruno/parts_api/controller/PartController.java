@@ -2,6 +2,7 @@ package com.github.reenatobruno.parts_api.controller;
 
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
+import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.service.PartService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ public class PartController implements PartControllerOpenApi {
     private final PartService partService;
 
     public PartController(PartService partService) {
+
         this.partService = partService;
     }
 
@@ -46,7 +48,7 @@ public class PartController implements PartControllerOpenApi {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PartResponseDTO> update(@PathVariable Long id, @Valid @RequestBody PartRequestDTO request) {
+    public ResponseEntity<PartResponseDTO> update(@PathVariable Long id, @Valid @RequestBody PartUpdateDTO request) {
         return ResponseEntity.ok(partService.update(id, request));
     }
 
