@@ -26,11 +26,10 @@ public class PartDomainValidation {
     public static String requireValidPartNumber(String value, String fieldName, int maxLength) {
         String cleaned = requireNonBlank(value, fieldName, maxLength);
 
-        if (!cleaned.matches("^[a-zA-Z0-9]+$"))
+        if (!cleaned.matches("^[A-Za-z0-9\\-]+$")) {
             throw new IllegalArgumentException(fieldName + " must contain only letters and numbers");
-
+        }
         return cleaned.toUpperCase();
-
     }
 
     public static BigDecimal requirePositivePrice(BigDecimal value, String fieldName) {
