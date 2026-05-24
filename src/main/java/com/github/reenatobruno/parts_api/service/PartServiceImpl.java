@@ -2,6 +2,7 @@ package com.github.reenatobruno.parts_api.service;
 
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
+import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.Part;
 import com.github.reenatobruno.parts_api.infra.ResourceNotFoundException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
@@ -51,22 +52,18 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional
-    public PartResponseDTO update(Long id, PartRequestDTO request) {
+    public PartResponseDTO update(Long id, PartUpdateDTO request) {
         Part existingPart = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
-        if (!existingPart.getPartNumber().equals(request.getPartNumber())
-                && repository.existsByPartNumber(request.getPartNumber())) {
-            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
-        }
+
         existingPart.updateFields(
-                request.getPartNumber(),
+
                 request.getName(),
                 request.getPrice(),
                 request.getQuantity(),
                 request.getSupplier(),
                 request.getDescription()
         );
-
         return mapper.toResponseDTO(existingPart);
     }
 
