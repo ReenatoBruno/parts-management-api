@@ -102,9 +102,8 @@ public class Part {
                 return Objects.hash(partNumber);
         }
 
-        private void updateFields(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
+        public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
 
-                setPartNumber(partNumber);
                 setName(name);
                 setPrice(price);
                 setQuantity(quantity);
