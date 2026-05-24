@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Builder
@@ -33,9 +33,8 @@ public class PartResponseDTO {
     private String description;
 
     @Schema(description = "Date when part was created", example = "2024-01-15T10:30:00")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Schema(description = "Date when part was last updated", example = "2024-01-15T10:30:00")
-    private LocalDateTime updatedAt;
-
+    private Instant updatedAt;
 }
