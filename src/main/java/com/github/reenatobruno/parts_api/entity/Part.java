@@ -89,6 +89,15 @@ public class Part {
                 this.description = PartDomainValidation.requireNonBlankIfPresent(description, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
+        public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
+
+                setName(name);
+                setPrice(price);
+                setQuantity(quantity);
+                setSupplier(supplier);
+                setDescription(description);
+        }
+
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
@@ -100,14 +109,5 @@ public class Part {
         @Override
         public int hashCode() {
                 return Objects.hash(partNumber);
-        }
-
-        public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
-
-                setName(name);
-                setPrice(price);
-                setQuantity(quantity);
-                setSupplier(supplier);
-                setDescription(description);
         }
 }
