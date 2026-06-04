@@ -32,12 +32,19 @@ public class PartServiceImpl implements PartService {
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
 
+        log.info("Checking if part number already exists {}", request.getPartNumber());
+
         if (repository.existsByPartNumber(request.getPartNumber())) {
+
+            log.warn("Part number already exists {}", request.getPartNumber());
+
             throw new PartNumberAlreadyExistsException(request.getPartNumber());
         }
         Part part = mapper.toEntity(request);
 
         Part saved = repository.save(part);
+
+        log.debug("Part persisted successfully with ID: {}", saved.getId());
 
         return mapper.toResponseDTO(saved);
     }
