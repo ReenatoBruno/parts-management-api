@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Part Controller", description = "Endpoints for API managing parts")
 public interface PartControllerOpenApi {
@@ -87,7 +88,9 @@ public interface PartControllerOpenApi {
                             description = "Internal server error")
             }
     )
-    ResponseEntity<Page<PartResponseDTO>> getAll(@Parameter(description = "Pagination parameters (page, size, sort)") String partName, Pageable pageable);
+    ResponseEntity<Page<PartResponseDTO>> getAll(
+            @Parameter(description = "Filter by part name") @RequestParam(required = false) String partName,
+            @Parameter(description = "Pagination parameters (page, size, sort)") Pageable pageable);
 
     @Operation(
             summary = "Update a part by ID",
@@ -119,7 +122,7 @@ public interface PartControllerOpenApi {
                     )
             }
     )
-    ResponseEntity<PartResponseDTO> update(@Parameter(description = "Part ID") @PathVariable Long id, @Valid @RequestBody PartUpdateDTO request);
+    ResponseEntity<PartResponseDTO> update(@Parameter(description = "ID of the part to be updated") @PathVariable Long id, @Valid @RequestBody PartUpdateDTO request);
 
     @Operation(
             summary = "Delete a part by ID",
@@ -140,5 +143,5 @@ public interface PartControllerOpenApi {
                             description = "Internal server error")
             }
     )
-    ResponseEntity<Void> delete(@Parameter(description = "Part ID")@PathVariable Long id);
+    ResponseEntity<Void> delete(@Parameter(description = "ID of the part to be deleted")@PathVariable Long id);
 }
