@@ -10,9 +10,9 @@ public interface PartService {
 
     PartResponseDTO create(PartRequestDTO request);
 
-    Page<PartResponseDTO> getAll(String partName, Pageable pageable);
-
     PartResponseDTO getById(Long id);
+
+    Page<PartResponseDTO> getAll(String partName, Pageable pageable);
 
     PartResponseDTO update(Long id, PartUpdateDTO request);
 
