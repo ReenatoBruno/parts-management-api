@@ -4,15 +4,18 @@ import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.Part;
+import com.github.reenatobruno.parts_api.infra.PartNotFoundException;
 import com.github.reenatobruno.parts_api.infra.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.infra.ResourceNotFoundException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class PartServiceImpl implements PartService {
 
@@ -42,6 +45,7 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional(readOnly = true)
     public Page<PartResponseDTO> getAll(String partName, Pageable pageable) {
+
         if (partName == null || partName.isBlank()) {
             return repository.findAll(pageable)
                     .map(mapper::toResponseDTO);
@@ -53,9 +57,14 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional(readOnly = true)
     public PartResponseDTO getById(Long id) {
+
         return repository.findById(id)
                 .map(mapper::toResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Part not found with ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Part not found with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
     }
 
     @Override
