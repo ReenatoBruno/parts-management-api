@@ -89,9 +89,17 @@ public class PartServiceImpl implements PartService {
     @Transactional
     public void delete(Long id) {
 
+        log.info("Deleting part with ID: {}", id);
+
         Part part = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Part not found for deletion with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
 
         repository.delete(part);
+
+        log.debug("Part deleted successfully with ID: {}", id);
     }
 }
