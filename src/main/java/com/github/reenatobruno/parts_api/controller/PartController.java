@@ -7,6 +7,7 @@ import com.github.reenatobruno.parts_api.service.PartService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,10 @@ public class PartController implements PartControllerOpenApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PartResponseDTO>> getAll(@PageableDefault(size = 20, sort = "id")Pageable pageable) {
-        return ResponseEntity.ok(partService.getAll(pageable));
+    public ResponseEntity<Page<PartResponseDTO>> getAll(
+            @RequestParam(required = false) String partName,
+            @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(partService.getAll(partName, pageable));
     }
 
     @GetMapping("/{id}")
