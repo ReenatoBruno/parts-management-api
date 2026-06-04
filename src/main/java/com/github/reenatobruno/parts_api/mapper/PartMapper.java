@@ -2,6 +2,7 @@ package com.github.reenatobruno.parts_api.mapper;
 
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
+import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.Part;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class PartMapper {
         );
     }
 
-public PartResponseDTO toResponseDTO(Part part) {
+    public PartResponseDTO toResponseDTO(Part part) {
     return PartResponseDTO.builder()
             .id(part.getId())
             .partNumber(part.getPartNumber())
@@ -30,5 +31,15 @@ public PartResponseDTO toResponseDTO(Part part) {
             .createdAt(part.getCreatedAt())
             .updatedAt(part.getUpdatedAt())
             .build();
+    }
+
+    public void updateEntity(Part part, PartUpdateDTO dto) {
+        part.updateFields(
+                dto.getName(),
+                dto.getPrice(),
+                dto.getQuantity(),
+                dto.getSupplier(),
+                dto.getDescription()
+        );
     }
 }
