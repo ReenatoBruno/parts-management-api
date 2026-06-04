@@ -10,7 +10,7 @@ public interface PartService {
 
     PartResponseDTO create(PartRequestDTO request);
 
-    Page<PartResponseDTO> getAll(Pageable pageable);
+    Page<PartResponseDTO> getAll(String partName, Pageable pageable);
 
     PartResponseDTO getById(Long id);
 
