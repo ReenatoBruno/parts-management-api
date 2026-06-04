@@ -44,6 +44,20 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional(readOnly = true)
+    public PartResponseDTO getById(Long id) {
+
+        return repository.findById(id)
+
+                .map(mapper::toResponseDTO)
+                .orElseThrow(() -> {
+                    log.warn("Part not found with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<PartResponseDTO> getAll(String partName, Pageable pageable) {
 
         if (partName == null || partName.isBlank()) {
@@ -55,21 +69,10 @@ public class PartServiceImpl implements PartService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public PartResponseDTO getById(Long id) {
-
-        return repository.findById(id)
-                .map(mapper::toResponseDTO)
-                .orElseThrow(() -> {
-                    log.warn("Part not found with ID: {}", id);
-
-                    return new PartNotFoundException(id);
-                });
-    }
-
-    @Override
     @Transactional
     public PartResponseDTO update(Long id, PartUpdateDTO request) {
+
+        log.info("Updating part with ID: {}", id);
 
         Part existingPart = repository.findById(id)
                 .orElseThrow(() -> {
