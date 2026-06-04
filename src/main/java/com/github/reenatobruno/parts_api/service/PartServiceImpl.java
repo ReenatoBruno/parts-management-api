@@ -6,7 +6,6 @@ import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.Part;
 import com.github.reenatobruno.parts_api.infra.PartNotFoundException;
 import com.github.reenatobruno.parts_api.infra.PartNumberAlreadyExistsException;
-import com.github.reenatobruno.parts_api.infra.ResourceNotFoundException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
 import lombok.extern.slf4j.Slf4j;
