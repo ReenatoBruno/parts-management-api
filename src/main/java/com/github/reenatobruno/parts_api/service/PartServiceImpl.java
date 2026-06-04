@@ -70,17 +70,18 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional
     public PartResponseDTO update(Long id, PartUpdateDTO request) {
+
         Part existingPart = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Part not found for update with ID: {}", id);
 
-        existingPart.updateFields(
+                    return new PartNotFoundException(id);
+                });
 
-                request.getName(),
-                request.getPrice(),
-                request.getQuantity(),
-                request.getSupplier(),
-                request.getDescription()
-        );
+        mapper.updateEntity(existingPart, request);
+
+        log.debug("Part updated successfully with ID: {}", id);
+
         return mapper.toResponseDTO(existingPart);
     }
 
