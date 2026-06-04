@@ -41,8 +41,12 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PartResponseDTO> getAll(Pageable pageable) {
-        return repository.findAll(pageable)
+    public Page<PartResponseDTO> getAll(String partName, Pageable pageable) {
+        if (partName == null || partName.isBlank()) {
+            return repository.findAll(pageable)
+                    .map(mapper::toResponseDTO);
+        }
+        return repository.findAllByNameContainingIgnoreCase(partName, pageable)
                 .map(mapper::toResponseDTO);
     }
 
@@ -74,8 +78,10 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional
     public void delete(Long id) {
+
         Part part = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id));
+
         repository.delete(part);
     }
 }
