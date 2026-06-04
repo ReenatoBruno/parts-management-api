@@ -26,6 +26,7 @@ public class PartController implements PartControllerOpenApi {
         this.partService = partService;
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<PartResponseDTO> create(@Valid @RequestBody PartRequestDTO request) {
 
@@ -39,6 +40,13 @@ public class PartController implements PartControllerOpenApi {
         return ResponseEntity.created(uri).body(response);
     }
 
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<PartResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(partService.getById(id));
+    }
+
+    @Override
     @GetMapping
     public ResponseEntity<Page<PartResponseDTO>> getAll(
             @RequestParam(required = false) String partName,
@@ -47,11 +55,7 @@ public class PartController implements PartControllerOpenApi {
         return ResponseEntity.ok(partService.getAll(partName, pageable));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PartResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(partService.getById(id));
-    }
-
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<PartResponseDTO> update(
             @PathVariable Long id,
@@ -60,6 +64,7 @@ public class PartController implements PartControllerOpenApi {
         return ResponseEntity.ok(partService.update(id, request));
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
