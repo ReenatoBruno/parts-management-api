@@ -4,6 +4,7 @@ import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.Part;
+import com.github.reenatobruno.parts_api.infra.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.infra.ResourceNotFoundException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
@@ -27,11 +28,14 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
+
         if (repository.existsByPartNumber(request.getPartNumber())) {
-            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
+            throw new PartNumberAlreadyExistsException(request.getPartNumber());
         }
         Part part = mapper.toEntity(request);
+
         Part saved = repository.save(part);
+
         return mapper.toResponseDTO(saved);
     }
 
