@@ -9,6 +9,7 @@ import com.github.reenatobruno.parts_api.infra.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,19 @@ public class PartServiceImpl implements PartService {
         }
         Part part = mapper.toEntity(request);
 
-        Part saved = repository.save(part);
+        try {
+            Part saved = repository.save(part);
 
-        log.debug("Part persisted successfully with ID: {}", saved.getId());
+            log.debug("Part persisted successfully with ID: {}", saved.getId());
 
-        return mapper.toResponseDTO(saved);
+            return mapper.toResponseDTO(saved);
+
+        } catch (DataIntegrityViolationException e) {
+
+            log.error("Database integrity violation while creating part: {}", request.getPartNumber());
+
+            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+        }
     }
 
     @Override
