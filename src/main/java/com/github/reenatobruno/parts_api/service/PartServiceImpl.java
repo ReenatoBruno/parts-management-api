@@ -45,7 +45,7 @@ public class PartServiceImpl implements PartService {
         try {
             Part saved = repository.save(part);
 
-            log.debug("Part persisted successfully with ID: {}", saved.getId());
+            log.info("Part created successfully with ID: {} and Part Number: {}", saved.getId(), saved.getPartNumber());
 
             return mapper.toResponseDTO(saved);
 
@@ -61,10 +61,9 @@ public class PartServiceImpl implements PartService {
     @Transactional(readOnly = true)
     public PartResponseDTO getById(Long id) {
 
-        log.debug("Fetching part with ID: {}", id);
+        log.info("Fetching part with ID: {}", id);
 
         return repository.findById(id)
-
                 .map(mapper::toResponseDTO)
                 .orElseThrow(() -> {
                     log.warn("Part not found with ID: {}", id);
@@ -102,9 +101,11 @@ public class PartServiceImpl implements PartService {
 
         mapper.updateEntity(existingPart, request);
 
-        log.debug("Part updated successfully with ID: {}", id);
+        Part updated = repository.save(existingPart);
 
-        return mapper.toResponseDTO(existingPart);
+        log.info("Part updated successfully with ID: {}", id);
+
+        return mapper.toResponseDTO(updated);
     }
 
     @Override
@@ -122,6 +123,6 @@ public class PartServiceImpl implements PartService {
 
         repository.delete(part);
 
-        log.debug("Part deleted successfully with ID: {}", id);
+        log.info("Part deleted successfully with ID: {}", id);
     }
 }
