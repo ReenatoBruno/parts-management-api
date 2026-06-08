@@ -1,4 +1,4 @@
-package com.github.reenatobruno.parts_api.infra;
+package com.github.reenatobruno.parts_api.exception;
 
 public class PartNotFoundException extends RuntimeException {
     public PartNotFoundException(Long id) {
