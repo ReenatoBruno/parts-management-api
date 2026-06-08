@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_parts")
+@Table(name = "tb_parts_api")
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Part {
@@ -31,7 +31,7 @@ public class Part {
         @Column(nullable = false, unique = true, updatable = false, length = MAX_PART_NUMBER_LENGTH)
         private String partNumber;
 
-        @Column(nullable = false, length = MAX_NAME_LENGTH)
+        @Column(name = "part_name", nullable = false, length = MAX_NAME_LENGTH)
         private String name;
 
         @Column(nullable = false, precision = 10, scale = 2)
@@ -43,15 +43,15 @@ public class Part {
         @Column(nullable = false, length = MAX_SUPPLIER_LENGTH )
         private String supplier;
 
-        @Column(length = MAX_DESCRIPTION_LENGTH)
+        @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
         private String description;
 
         @CreatedDate
-        @Column(updatable = false, nullable = false)
+        @Column(name = "part_created_at", updatable = false, nullable = false)
         private Instant createdAt;
 
         @LastModifiedDate
-        @Column(nullable = false)
+        @Column(name = "part_updated_at", nullable = false)
         private Instant updatedAt;
 
 
