@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name = "tb_parts_api")
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Part {
+public class PartEntity {
 
         private static final int MAX_PART_NUMBER_LENGTH = 50;
         private static final int MAX_NAME_LENGTH = 100;
@@ -56,7 +56,7 @@ public class Part {
         private Instant updatedAt;
 
 
-        public Part(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
+        public PartEntity(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
 
                 setPartNumber(partNumber);
                 setName(name);
@@ -109,8 +109,8 @@ public class Part {
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                Part part = (Part) o;
-                return partNumber != null && partNumber.equals((part.getPartNumber()));
+                PartEntity partEntity = (PartEntity) o;
+                return partNumber != null && partNumber.equals((partEntity.getPartNumber()));
         }
 
         @Override

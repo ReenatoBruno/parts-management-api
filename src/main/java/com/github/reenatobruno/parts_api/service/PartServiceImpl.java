@@ -3,7 +3,7 @@ package com.github.reenatobruno.parts_api.service;
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
-import com.github.reenatobruno.parts_api.entity.Part;
+import com.github.reenatobruno.parts_api.entity.PartEntity;
 import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
 import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
@@ -40,10 +40,10 @@ public class PartServiceImpl implements PartService {
 
             throw new PartNumberAlreadyExistsException(request.getPartNumber());
         }
-        Part part = mapper.toEntity(request);
+        PartEntity partEntity = mapper.toEntity(request);
 
         try {
-            Part saved = repository.save(part);
+            PartEntity saved = repository.save(partEntity);
 
             log.info("Part created successfully with ID: {} and Part Number: {}", saved.getId(), saved.getPartNumber());
 
@@ -92,16 +92,16 @@ public class PartServiceImpl implements PartService {
 
         log.info("Updating part with ID: {}", id);
 
-        Part existingPart = repository.findById(id)
+        PartEntity existingPartEntity = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Part not found for update with ID: {}", id);
 
                     return new PartNotFoundException(id);
                 });
 
-        mapper.updateEntity(existingPart, request);
+        mapper.updateEntity(existingPartEntity, request);
 
-        Part updated = repository.save(existingPart);
+        PartEntity updated = repository.save(existingPartEntity);
 
         log.info("Part updated successfully with ID: {}", id);
 
@@ -114,14 +114,14 @@ public class PartServiceImpl implements PartService {
 
         log.info("Deleting part with ID: {}", id);
 
-        Part part = repository.findById(id)
+        PartEntity partEntity = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Part not found for deletion with ID: {}", id);
 
                     return new PartNotFoundException(id);
                 });
 
-        repository.delete(part);
+        repository.delete(partEntity);
 
         log.info("Part deleted successfully with ID: {}", id);
     }
