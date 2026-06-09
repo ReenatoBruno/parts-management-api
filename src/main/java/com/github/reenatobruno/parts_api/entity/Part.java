@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -66,15 +67,19 @@ public class Part {
         }
 
         private void setPartNumber(String partNumber) {
-                this.partNumber = PartDomainValidation.requireValidPartNumber(partNumber, "Part number", MAX_PART_NUMBER_LENGTH);
+                String cleaned = partNumber.strip();
+                String normalized = cleaned.toUpperCase();
+                this.partNumber = PartDomainValidation.requireValidPartNumber(normalized, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setName(String name) {
-                this.name = PartDomainValidation.requireNonBlank(name, "Part's name", MAX_NAME_LENGTH);
+                String normalized = name.strip();
+                this.name = PartDomainValidation.requireNonBlank(normalized, "Part's name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                this.price = PartDomainValidation.requirePositivePrice(price, "Part's price");
+                BigDecimal normalized = price.setScale(2, RoundingMode.HALF_UP);
+                this.price = PartDomainValidation.requirePositivePrice(normalized, "Part's price");
         }
 
         private void setQuantity(Integer quantity) {
@@ -82,11 +87,13 @@ public class Part {
         }
 
         private void setSupplier(String supplier) {
-                this.supplier = PartDomainValidation.requireNonBlank(supplier, "Supplier", MAX_SUPPLIER_LENGTH);
+                String normalized = supplier.strip();
+                this.supplier = PartDomainValidation.requireNonBlank(normalized, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
         private void setDescription(String description) {
-                this.description = PartDomainValidation.requireNonBlankIfPresent(description, "Description", MAX_DESCRIPTION_LENGTH);
+                String normalized = description != null ? description.strip() : null;
+                this.description = PartDomainValidation.requireNonBlankIfPresent(normalized, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
