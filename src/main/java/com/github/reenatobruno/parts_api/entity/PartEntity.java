@@ -9,15 +9,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_parts")
+@Table(name = "tb_parts_api")
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Part {
+public class PartEntity {
 
         private static final int MAX_PART_NUMBER_LENGTH = 50;
         private static final int MAX_NAME_LENGTH = 100;
@@ -31,7 +32,7 @@ public class Part {
         @Column(nullable = false, unique = true, updatable = false, length = MAX_PART_NUMBER_LENGTH)
         private String partNumber;
 
-        @Column(nullable = false, length = MAX_NAME_LENGTH)
+        @Column(name = "part_name", nullable = false, length = MAX_NAME_LENGTH)
         private String name;
 
         @Column(nullable = false, precision = 10, scale = 2)
@@ -43,19 +44,19 @@ public class Part {
         @Column(nullable = false, length = MAX_SUPPLIER_LENGTH )
         private String supplier;
 
-        @Column(length = MAX_DESCRIPTION_LENGTH)
+        @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
         private String description;
 
         @CreatedDate
-        @Column(updatable = false, nullable = false)
+        @Column(name = "part_created_at", updatable = false, nullable = false)
         private Instant createdAt;
 
         @LastModifiedDate
-        @Column(nullable = false)
+        @Column(name = "part_updated_at", nullable = false)
         private Instant updatedAt;
 
 
-        public Part(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
+        public PartEntity(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
 
                 setPartNumber(partNumber);
                 setName(name);
@@ -66,15 +67,19 @@ public class Part {
         }
 
         private void setPartNumber(String partNumber) {
-                this.partNumber = PartDomainValidation.requireValidPartNumber(partNumber, "Part number", MAX_PART_NUMBER_LENGTH);
+                String normalize = PartDomainValidation.normalize(partNumber);
+                String upperCase = normalize != null ? normalize.toUpperCase() : null;
+                this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setName(String name) {
-                this.name = PartDomainValidation.requireNonBlank(name, "Part's name", MAX_NAME_LENGTH);
+                String normalized = PartDomainValidation.normalize(name);
+                this.name = PartDomainValidation.requireNonBlank(normalized, "Part's name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                this.price = PartDomainValidation.requirePositivePrice(price, "Part's price");
+                BigDecimal normalized = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
+                this.price = PartDomainValidation.requirePositivePrice(normalized, "Part's price");
         }
 
         private void setQuantity(Integer quantity) {
@@ -82,11 +87,13 @@ public class Part {
         }
 
         private void setSupplier(String supplier) {
-                this.supplier = PartDomainValidation.requireNonBlank(supplier, "Supplier", MAX_SUPPLIER_LENGTH);
+                String normalized = PartDomainValidation.normalize(supplier);
+                this.supplier = PartDomainValidation.requireNonBlank(normalized, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
         private void setDescription(String description) {
-                this.description = PartDomainValidation.requireNonBlankIfPresent(description, "Description", MAX_DESCRIPTION_LENGTH);
+                String normalized = description != null ? description.strip() : null;
+                this.description = PartDomainValidation.requireNonBlankIfPresent(normalized, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
@@ -102,8 +109,8 @@ public class Part {
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                Part part = (Part) o;
-                return partNumber != null && partNumber.equals((part.getPartNumber()));
+                PartEntity partEntity = (PartEntity) o;
+                return partNumber != null && partNumber.equals((partEntity.getPartNumber()));
         }
 
         @Override

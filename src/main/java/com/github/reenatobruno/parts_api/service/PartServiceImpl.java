@@ -3,12 +3,13 @@ package com.github.reenatobruno.parts_api.service;
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
-import com.github.reenatobruno.parts_api.entity.Part;
-import com.github.reenatobruno.parts_api.infra.PartNotFoundException;
-import com.github.reenatobruno.parts_api.infra.PartNumberAlreadyExistsException;
+import com.github.reenatobruno.parts_api.entity.PartEntity;
+import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
+import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,23 +40,30 @@ public class PartServiceImpl implements PartService {
 
             throw new PartNumberAlreadyExistsException(request.getPartNumber());
         }
-        Part part = mapper.toEntity(request);
+        PartEntity partEntity = mapper.toEntity(request);
 
-        Part saved = repository.save(part);
+        try {
+            PartEntity saved = repository.save(partEntity);
 
-        log.debug("Part persisted successfully with ID: {}", saved.getId());
+            log.info("Part created successfully with ID: {} and Part Number: {}", saved.getId(), saved.getPartNumber());
 
-        return mapper.toResponseDTO(saved);
+            return mapper.toResponseDTO(saved);
+
+        } catch (DataIntegrityViolationException e) {
+
+            log.error("Database integrity violation while creating part: {}", request.getPartNumber());
+
+            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public PartResponseDTO getById(Long id) {
 
-        log.debug("Fetching part with ID: {}", id);
+        log.info("Fetching part with ID: {}", id);
 
         return repository.findById(id)
-
                 .map(mapper::toResponseDTO)
                 .orElseThrow(() -> {
                     log.warn("Part not found with ID: {}", id);
@@ -84,18 +92,20 @@ public class PartServiceImpl implements PartService {
 
         log.info("Updating part with ID: {}", id);
 
-        Part existingPart = repository.findById(id)
+        PartEntity existingPartEntity = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Part not found for update with ID: {}", id);
 
                     return new PartNotFoundException(id);
                 });
 
-        mapper.updateEntity(existingPart, request);
+        mapper.updateEntity(existingPartEntity, request);
 
-        log.debug("Part updated successfully with ID: {}", id);
+        PartEntity updated = repository.save(existingPartEntity);
 
-        return mapper.toResponseDTO(existingPart);
+        log.info("Part updated successfully with ID: {}", id);
+
+        return mapper.toResponseDTO(updated);
     }
 
     @Override
@@ -104,15 +114,15 @@ public class PartServiceImpl implements PartService {
 
         log.info("Deleting part with ID: {}", id);
 
-        Part part = repository.findById(id)
+        PartEntity partEntity = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Part not found for deletion with ID: {}", id);
 
                     return new PartNotFoundException(id);
                 });
 
-        repository.delete(part);
+        repository.delete(partEntity);
 
-        log.debug("Part deleted successfully with ID: {}", id);
+        log.info("Part deleted successfully with ID: {}", id);
     }
 }
