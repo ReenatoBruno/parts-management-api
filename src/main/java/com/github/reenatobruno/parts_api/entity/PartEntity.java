@@ -67,18 +67,18 @@ public class PartEntity {
         }
 
         private void setPartNumber(String partNumber) {
-                String cleaned = partNumber.strip();
-                String normalized = cleaned.toUpperCase();
-                this.partNumber = PartDomainValidation.requireValidPartNumber(normalized, "Part number", MAX_PART_NUMBER_LENGTH);
+                String normalize = PartDomainValidation.normalize(partNumber);
+                String upperCase = normalize != null ? normalize.toUpperCase() : null;
+                this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setName(String name) {
-                String normalized = name.strip();
+                String normalized = PartDomainValidation.normalize(name);
                 this.name = PartDomainValidation.requireNonBlank(normalized, "Part's name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                BigDecimal normalized = price.setScale(2, RoundingMode.HALF_UP);
+                BigDecimal normalized = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
                 this.price = PartDomainValidation.requirePositivePrice(normalized, "Part's price");
         }
 
@@ -87,7 +87,7 @@ public class PartEntity {
         }
 
         private void setSupplier(String supplier) {
-                String normalized = supplier.strip();
+                String normalized = PartDomainValidation.normalize(supplier);
                 this.supplier = PartDomainValidation.requireNonBlank(normalized, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
