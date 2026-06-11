@@ -7,6 +7,10 @@ public class PartDomainValidation {
 
     private PartDomainValidation () {}
 
+    public static String normalize(String value) {
+        return value != null ? value.strip() : null;
+    }
+
     public static String requireNonBlank(String value, String fieldName, int maxLength) {
         Objects.requireNonNull(value, fieldName + " is required");
 
