@@ -2,15 +2,20 @@ package com.github.reenatobruno.parts_api.service;
 
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
-import com.github.reenatobruno.parts_api.entity.Part;
-import com.github.reenatobruno.parts_api.infra.ResourceNotFoundException;
+import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
+import com.github.reenatobruno.parts_api.entity.PartEntity;
+import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
+import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class PartServiceImpl implements PartService {
 
@@ -26,55 +31,98 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
-        if (repository.existsByPartNumber(request.getPartNumber())) {
-            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
-        }
-        Part part = mapper.toEntity(request);
-        Part saved = repository.save(part);
-        return mapper.toResponseDTO(saved);
-    }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Page<PartResponseDTO> getAll(Pageable pageable) {
-        return repository.findAll(pageable)
-                .map(mapper::toResponseDTO);
+        log.info("Checking if part number already exists {}", request.getPartNumber());
+
+        if (repository.existsByPartNumber(request.getPartNumber())) {
+
+            log.warn("Part number already exists {}", request.getPartNumber());
+
+            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+        }
+        PartEntity partEntity = mapper.toEntity(request);
+
+        try {
+            PartEntity saved = repository.save(partEntity);
+
+            log.info("Part created successfully with ID: {} and Part Number: {}", saved.getId(), saved.getPartNumber());
+
+            return mapper.toResponseDTO(saved);
+
+        } catch (DataIntegrityViolationException e) {
+
+            log.error("Database integrity violation while creating part: {}", request.getPartNumber());
+
+            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public PartResponseDTO getById(Long id) {
+
+        log.info("Fetching part with ID: {}", id);
+
         return repository.findById(id)
                 .map(mapper::toResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Part not found with ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Part not found with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PartResponseDTO> getAll(String partName, Pageable pageable) {
+
+        log.debug("Fetching all parts with filter part name {}", partName);
+
+        if (partName == null || partName.isBlank()) {
+            return repository.findAll(pageable)
+                    .map(mapper::toResponseDTO);
+        }
+        return repository.findAllByNameContainingIgnoreCase(partName, pageable)
+                .map(mapper::toResponseDTO);
     }
 
     @Override
     @Transactional
-    public PartResponseDTO update(Long id, PartRequestDTO request) {
-        Part existingPart = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot update. Part not found with ID: " + id));
-        if (!existingPart.getPartNumber().equals(request.getPartNumber())
-                && repository.existsByPartNumber(request.getPartNumber())) {
-            throw new IllegalArgumentException("Part number already exists: " + request.getPartNumber());
-        }
-        existingPart.updateFields(
-                request.getPartNumber(),
-                request.getName(),
-                request.getPrice(),
-                request.getQuantity(),
-                request.getSupplier(),
-                request.getDescription()
-        );
+    public PartResponseDTO update(Long id, PartUpdateDTO request) {
 
-        return mapper.toResponseDTO(existingPart);
+        log.info("Updating part with ID: {}", id);
+
+        PartEntity existingPartEntity = repository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Part not found for update with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
+
+        mapper.updateEntity(existingPartEntity, request);
+
+        PartEntity updated = repository.save(existingPartEntity);
+
+        log.info("Part updated successfully with ID: {}", id);
+
+        return mapper.toResponseDTO(updated);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        Part part = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot delete. Part not found with ID: " + id));
-        repository.delete(part);
+
+        log.info("Deleting part with ID: {}", id);
+
+        PartEntity partEntity = repository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Part not found for deletion with ID: {}", id);
+
+                    return new PartNotFoundException(id);
+                });
+
+        repository.delete(partEntity);
+
+        log.info("Part deleted successfully with ID: {}", id);
     }
 }
