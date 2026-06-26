@@ -23,8 +23,5 @@ public record UserResponseDTO(
 
         @Schema(description = "Date and time when the user account was last updated", example = "2026-06-21T14:30:00Z")
         Instant updatedAt
-
-
-
 ) {
 }
