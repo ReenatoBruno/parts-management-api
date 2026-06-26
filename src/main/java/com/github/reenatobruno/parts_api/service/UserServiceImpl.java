@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void validateUser(UserRequestDTO requestDTO) {
+    private void validateUser(UserRequestDTO requestDTO) {
 
         if (repository.existsByUserCpf(requestDTO.userCpf())) {
             throw new UserCpfAlreadyExistsException(requestDTO.userCpf());
