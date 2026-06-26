@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class PartMapper {
     public PartEntity toEntity(PartRequestDTO dto) {
         return new PartEntity(
-                dto.getPartNumber(),
-                dto.getName(),
-                dto.getPrice(),
-                dto.getQuantity(),
-                dto.getSupplier(),
-                dto.getDescription()
+                dto.partNumber(),
+                dto.name(),
+                dto.price(),
+                dto.quantity(),
+                dto.supplier(),
+                dto.description()
         );
     }
 
@@ -35,11 +35,11 @@ public class PartMapper {
 
     public void updateEntity(PartEntity partEntity, PartUpdateDTO dto) {
         partEntity.updateFields(
-                dto.getName(),
-                dto.getPrice(),
-                dto.getQuantity(),
-                dto.getSupplier(),
-                dto.getDescription()
+                dto.name(),
+                dto.price(),
+                dto.quantity(),
+                dto.supplier(),
+                dto.description()
         );
     }
 }
