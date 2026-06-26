@@ -1,12 +1,11 @@
 package com.github.reenatobruno.parts_api.service;
 
+import com.github.reenatobruno.parts_api.dto.UserChangePassword;
 import com.github.reenatobruno.parts_api.dto.UserRequestDTO;
 import com.github.reenatobruno.parts_api.dto.UserResponseDTO;
+import com.github.reenatobruno.parts_api.dto.UserUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.UserEntity;
-import com.github.reenatobruno.parts_api.exception.UserCpfAlreadyExistsException;
-import com.github.reenatobruno.parts_api.exception.UserDataConflictionException;
-import com.github.reenatobruno.parts_api.exception.UserEmailAlreadyExistsException;
-import com.github.reenatobruno.parts_api.exception.UserNotFoundExcerption;
+import com.github.reenatobruno.parts_api.exception.*;
 import com.github.reenatobruno.parts_api.mapper.UserMapper;
 import com.github.reenatobruno.parts_api.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
         return repository.findById(userID)
                 .map(mapper::toResponse)
                 .orElseThrow(() -> {
-                    throw new UserNotFoundExcerption(userID);
+                    throw new UserNotFoundException(userID);
                 });
     }
 
@@ -75,6 +74,30 @@ public class UserServiceImpl implements UserService {
                 .map(mapper::toResponse);
     }
 
+    @Override
+    @Transactional
+    public UserResponseDTO update(UUID userId, UserUpdateDTO updateDTO) {
+
+        UserEntity user = searchUser(userId);
+
+        mapper.updateEntity(user, updateDTO);
+
+        UserEntity saveUser = repository.save(user);
+
+        return mapper.toResponse(saveUser);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(UUID userId, UserChangePassword changePasswordDTO) {
+
+        UserEntity user = searchUser(userId);
+
+        if (!passwordEncoder.matches(changePasswordDTO.currentPassword(), user.getUserPassword())) {
+            throw new UserInvalidPasswordException();
+        }
+    }
+
     private void validateUser(UserRequestDTO requestDTO) {
 
         if (repository.existsByUserCpf(requestDTO.userCpf())) {
@@ -84,5 +107,15 @@ public class UserServiceImpl implements UserService {
         if (repository.existsByUserEmail(requestDTO.userEmail())) {
             throw new UserEmailAlreadyExistsException(requestDTO.userEmail());
         }
+    }
+
+    private UserEntity searchUser(UUID userId) {
+        return repository.findById(userId)
+                .orElseThrow(() -> {
+
+                    log.warn("User not found with id: {}", userId);
+
+                    throw new UserNotFoundException(userId);
+                });
     }
 }
