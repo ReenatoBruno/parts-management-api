@@ -16,7 +16,6 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_parts_api")
-@Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class PartEntity {
 
@@ -64,6 +63,42 @@ public class PartEntity {
                 setQuantity(quantity);
                 setSupplier(supplier);
                 setDescription(description);
+        }
+
+        public Long getId() {
+                return id;
+        }
+
+        public String getPartNumber() {
+                return partNumber;
+        }
+
+        public BigDecimal getPrice() {
+                return price;
+        }
+
+        public String getName() {
+                return name;
+        }
+
+        public Integer getQuantity() {
+                return quantity;
+        }
+
+        public String getSupplier() {
+                return supplier;
+        }
+
+        public String getDescription() {
+                return description;
+        }
+
+        public Instant getCreatedAt() {
+                return createdAt;
+        }
+
+        public Instant getUpdatedAt() {
+                return updatedAt;
         }
 
         private void setPartNumber(String partNumber) {
