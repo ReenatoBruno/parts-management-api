@@ -10,7 +10,7 @@ import java.util.UUID;
 public record UserResponseDTO(
 
         @Schema(description = "Unique identifier of the user account", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
-        UUID id,
+        UUID userId,
 
         @Schema(description = "Full name associated with the user account", example = "João da Silva")
         String userName,
