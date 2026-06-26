@@ -2,7 +2,6 @@ package com.github.reenatobruno.parts_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
 
 import java.math.BigDecimal;
 
