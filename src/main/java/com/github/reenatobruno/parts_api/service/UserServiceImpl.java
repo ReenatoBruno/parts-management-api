@@ -6,13 +6,18 @@ import com.github.reenatobruno.parts_api.entity.UserEntity;
 import com.github.reenatobruno.parts_api.exception.UserCpfAlreadyExistsException;
 import com.github.reenatobruno.parts_api.exception.UserDataConflictionException;
 import com.github.reenatobruno.parts_api.exception.UserEmailAlreadyExistsException;
+import com.github.reenatobruno.parts_api.exception.UserNotFoundExcerption;
 import com.github.reenatobruno.parts_api.mapper.UserMapper;
 import com.github.reenatobruno.parts_api.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -46,6 +51,28 @@ public class UserServiceImpl implements UserService {
         } catch (DataIntegrityViolationException e) {
             throw new UserDataConflictionException("CPF or E-mail already registered", e);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponseDTO getById(UUID userID) {
+        return repository.findById(userID)
+                .map(mapper::toResponse)
+                .orElseThrow(() -> {
+                    throw new UserNotFoundExcerption(userID);
+                });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<UserResponseDTO> getAll(String userName, Pageable pageable) {
+
+        if (userName == null || userName.isBlank()) {
+            return repository.findAll(pageable)
+                    .map(mapper::toResponse);
+        }
+        return repository.findAllByUserNameContainingIgnoreCase(userName, pageable)
+                .map(mapper::toResponse);
     }
 
     private void validateUser(UserRequestDTO requestDTO) {
