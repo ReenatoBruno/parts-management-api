@@ -13,10 +13,10 @@ public record UserResponseDTO(
         UUID id,
 
         @Schema(description = "Full name associated with the user account", example = "João da Silva")
-        String fullName,
+        String userName,
 
         @Schema(description = "Email address associated with the user account", example = "joao.silva@email.com")
-        String email,
+        String userEmail,
 
         @Schema(description = "Date and time when the user account was created", example = "2026-06-21T14:30:00Z")
         Instant createdAt,
