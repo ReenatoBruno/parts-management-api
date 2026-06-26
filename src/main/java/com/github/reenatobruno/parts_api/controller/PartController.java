@@ -33,7 +33,7 @@ public class PartController implements PartControllerOpenApi {
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(response.getId())
+                .buildAndExpand(response.id())
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);
