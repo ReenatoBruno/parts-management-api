@@ -1,9 +1,9 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.enums.UserRole;
+import com.github.reenatobruno.parts_api.util.UserDomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,15 +18,14 @@ import java.util.UUID;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_users")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
 
     private static final int MAX_NAME_LENGTH = 60;
 
-    private static final int MAX_DOC_LENGTH = 11;
+    private static final int MAX_CPF_LENGTH = 11;
 
-    private static final int MAX_DOC_EMAIL_LENGTH = 150;
+    private static final int MAX_EMAIL_LENGTH = 150;
 
     private static final int MAX_PASSWORD_LENGTH = 255;
 
@@ -37,10 +36,10 @@ public class UserEntity {
     @Column(name = "user_name", nullable = false, length = MAX_NAME_LENGTH)
     private String userName;
 
-    @Column(name = "user_Cpf", nullable = false, unique = true, length = MAX_DOC_LENGTH)
+    @Column(name = "user_cpf", nullable = false, unique = true, length = MAX_CPF_LENGTH)
     private String userCpf;
 
-    @Column(name = "user_email", nullable = false, unique = true, length = MAX_DOC_EMAIL_LENGTH)
+    @Column(name = "user_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
     private String userEmail;
 
     @Column(name = "user_password", nullable = false, length = MAX_PASSWORD_LENGTH)
@@ -64,7 +63,7 @@ public class UserEntity {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdA;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
@@ -83,23 +82,84 @@ public class UserEntity {
         setUserName(userName);
         setUserCpf(userCpf);
         setUserEmail(userEmail);
-        setEncodedPassword(userPassword);
+        setPassword(userPassword);
+        this.userRole = UserRole.USER;
         this.accountNonBlocked = true;
         this.accountNonExpired = true;
         this.credentialsNonExpired = true;
         this.accountEnabled = true;
     }
 
-    private void setUserName(String userName) {
+    public String getUserName() {
+        return userName;
     }
 
-    private void setUserCpf(String userDoc) {
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public String getUserCpf() {
+        return userCpf;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public boolean isAccountNonBlocked() {
+        return accountNonBlocked;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public boolean isAccountEnabled() {
+        return accountEnabled;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    private void setUserName(String userName) {
+        String normalizedUserName = UserDomainValidation.normalize(userName);
+        this.userName = UserDomainValidation.requireNonBlank(normalizedUserName, "User name", MAX_NAME_LENGTH);
+    }
+
+    private void setUserCpf(String userCpf) {
+        String normalizedCpf = UserDomainValidation.normalize(userCpf);
+        this.userCpf = UserDomainValidation.requireCpf(normalizedCpf, "CPF", MAX_CPF_LENGTH);
     }
 
     private void setUserEmail(String userEmail) {
+        String normalizedEmail = UserDomainValidation.normalize(userEmail);
+        String lowerCaseEmail = normalizedEmail != null ? normalizedEmail.toLowerCase() : null;
+        this.userEmail = UserDomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
     }
 
-    private void setEncodedPassword(String userPassword) {
+    private void setPassword(String userPassword) {
+        this.userPassword = UserDomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
     }
 
     public void disable() {
@@ -113,7 +173,7 @@ public class UserEntity {
     }
 
     public void changePassword(String newEncodedPassword) {
-        setEncodedPassword(newEncodedPassword);
+        setPassword(newEncodedPassword);
     }
 
     public void promoteToAdmin() {
