@@ -116,6 +116,10 @@ public class UserEntity {
         setEncodedPassword(newEncodedPassword);
     }
 
+    public void promoteToAdmin() {
+        this.userRole = UserRole.ADMIN;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
