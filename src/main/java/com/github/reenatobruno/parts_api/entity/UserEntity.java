@@ -90,6 +90,8 @@ public class UserEntity {
         this.accountEnabled = true;
     }
 
+    public UUID getId() {return id; }
+
     public String getUserName() {
         return userName;
     }
