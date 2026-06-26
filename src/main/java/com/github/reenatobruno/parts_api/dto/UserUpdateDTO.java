@@ -10,12 +10,12 @@ public record UserUpdateDTO(
         @Schema(description = "Full name associated with the user account", example = "João da Silva")
         @NotBlank
         @Size(max = 60)
-        String fullName,
+        String userName,
 
         @Schema(description = "Email address associated with the user account", example = "joao.silva@email.com")
         @NotBlank
         @Email
         @Size(max = 150)
-        String email
+        String userEmail
 ) {
 }
