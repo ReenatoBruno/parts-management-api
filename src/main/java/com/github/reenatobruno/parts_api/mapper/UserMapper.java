@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-    public UserEntity toEntity(UserRequestDTO requestDTO) {
+    public UserEntity toEntity(UserRequestDTO requestDTO, String encodedPassword) {
         return new UserEntity(
                 requestDTO.userName(),
                 requestDTO.userCpf(),
