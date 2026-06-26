@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS tb_parts_api (
     part_description VARCHAR(500),
     part_created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     part_updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                                  CONSTRAINT uq_part_number UNIQUE (part_number),
+
+    CONSTRAINT uq_part_number UNIQUE (part_number),
     CONSTRAINT chk_part_number_upper CHECK (part_number = UPPER(part_number)),
     CONSTRAINT chk_price_positive CHECK (price > 0),
     CONSTRAINT chk_quantity_positive CHECK (quantity > 0)
