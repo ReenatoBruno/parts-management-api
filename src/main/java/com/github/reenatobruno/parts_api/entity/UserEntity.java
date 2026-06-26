@@ -31,7 +31,8 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Column(name = "user_name", nullable = false, length = MAX_NAME_LENGTH)
     private String userName;
@@ -90,7 +91,7 @@ public class UserEntity {
         this.accountEnabled = true;
     }
 
-    public UUID getId() {return id; }
+    public UUID getUserId() {return userId; }
 
     public String getUserName() {
         return userName;
