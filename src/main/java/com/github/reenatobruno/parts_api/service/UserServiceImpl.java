@@ -96,6 +96,12 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(changePasswordDTO.currentPassword(), user.getUserPassword())) {
             throw new UserInvalidPasswordException();
         }
+
+        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.newPassword());
+
+        user.changePassword(encodedNewPassword);
+
+        repository.save(user);
     }
 
     private void validateUser(UserRequestDTO requestDTO) {
