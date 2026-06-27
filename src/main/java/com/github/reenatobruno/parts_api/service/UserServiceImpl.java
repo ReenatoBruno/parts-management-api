@@ -1,6 +1,6 @@
 package com.github.reenatobruno.parts_api.service;
 
-import com.github.reenatobruno.parts_api.dto.UserChangePassword;
+import com.github.reenatobruno.parts_api.dto.UserChangePasswordDTO;
 import com.github.reenatobruno.parts_api.dto.UserRequestDTO;
 import com.github.reenatobruno.parts_api.dto.UserResponseDTO;
 import com.github.reenatobruno.parts_api.dto.UserUpdateDTO;
@@ -54,11 +54,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserResponseDTO getById(UUID userID) {
-        return repository.findById(userID)
+    public UserResponseDTO getById(UUID userId) {
+        return repository.findById(userId)
                 .map(mapper::toResponse)
                 .orElseThrow(() -> {
-                    throw new UserNotFoundException(userID);
+
+                    log.warn("User not found with id: {}", userId);
+
+                    throw new UserNotFoundException(userId);
                 });
     }
 
@@ -89,17 +92,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(UUID userId, UserChangePassword changePasswordDTO) {
+    public void changePassword(UUID userId, UserChangePasswordDTO passwordDTO) {
 
         UserEntity user = searchUser(userId);
 
-        if (!passwordEncoder.matches(changePasswordDTO.currentPassword(), user.getUserPassword())) {
+        if (!passwordEncoder.matches(passwordDTO.currentPassword(), user.getUserPassword())) {
             throw new UserInvalidPasswordException();
         }
 
-        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.newPassword());
+        String encodedNewPassword = passwordEncoder.encode(passwordDTO.newPassword());
 
         user.changePassword(encodedNewPassword);
+
+        repository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void delete(UUID userId) {
+
+        UserEntity user = searchUser(userId);
+
+        user.disable();
 
         repository.save(user);
     }
