@@ -1,5 +1,6 @@
 package com.github.reenatobruno.parts_api.service;
 
+import com.github.reenatobruno.parts_api.dto.UserChangePasswordDTO;
 import com.github.reenatobruno.parts_api.dto.UserRequestDTO;
 import com.github.reenatobruno.parts_api.dto.UserResponseDTO;
 import com.github.reenatobruno.parts_api.dto.UserUpdateDTO;
@@ -17,4 +18,8 @@ public interface UserService {
     Page<UserResponseDTO> getAll(String userName, Pageable pageable);
 
     UserResponseDTO update(UUID userId, UserUpdateDTO updateDTO);
+
+    void changePassword(UUID userId, UserChangePasswordDTO passwordDTO);
+
+    void delete(UUID userId);
 }
