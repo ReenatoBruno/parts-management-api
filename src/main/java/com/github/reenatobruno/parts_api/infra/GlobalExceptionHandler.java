@@ -1,7 +1,6 @@
 package com.github.reenatobruno.parts_api.infra;
 
-import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
-import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
+import com.github.reenatobruno.parts_api.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +29,38 @@ public class GlobalExceptionHandler {
         problem.setTitle("Part not found");
         problem.setProperty("timestamp", Instant.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+    }
+
+    @ExceptionHandler(UserCpfAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleUserCpfAlreadyExists(UserCpfAlreadyExistsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("CPF already registered");
+        problem.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleUserNotFound(UserNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("User not found");
+        problem.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+    }
+
+    @ExceptionHandler(UserDataConflictionException.class)
+    public ResponseEntity<ProblemDetail> handleDataConfliction(UserDataConflictionException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Data conflict");
+        problem.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+    }
+
+    @ExceptionHandler(UserEmailAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleUserEmailAlreadyExists(UserEmailAlreadyExistsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Email already registered");
+        problem.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
