@@ -13,7 +13,7 @@ public class UserMapper {
                 requestDTO.userName(),
                 requestDTO.userCpf(),
                 requestDTO.userEmail(),
-                requestDTO.userPassword()
+                encodedPassword
         );
     }
 
