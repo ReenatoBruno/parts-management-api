@@ -32,13 +32,13 @@ public class PartServiceImpl implements PartService {
     @Transactional
     public PartResponseDTO create(PartRequestDTO request) {
 
-        log.info("Checking if part number already exists {}", request.getPartNumber());
+        log.info("Checking if part number already exists {}", request.partNumber());
 
-        if (repository.existsByPartNumber(request.getPartNumber())) {
+        if (repository.existsByPartNumber(request.partNumber())) {
 
-            log.warn("Part number already exists {}", request.getPartNumber());
+            log.warn("Part number already exists {}", request.partNumber());
 
-            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+            throw new PartNumberAlreadyExistsException(request.partNumber());
         }
         PartEntity partEntity = mapper.toEntity(request);
 
@@ -51,9 +51,9 @@ public class PartServiceImpl implements PartService {
 
         } catch (DataIntegrityViolationException e) {
 
-            log.error("Database integrity violation while creating part: {}", request.getPartNumber());
+            log.error("Database integrity violation while creating part: {}", request.partNumber());
 
-            throw new PartNumberAlreadyExistsException(request.getPartNumber());
+            throw new PartNumberAlreadyExistsException(request.partNumber());
         }
     }
 
