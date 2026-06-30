@@ -55,14 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserResponseDTO getById(UUID userId) {
-        return repository.findById(userId)
-                .map(mapper::toResponse)
-                .orElseThrow(() -> {
-
-                    log.warn("User not found with id: {}", userId);
-
-                    throw new UserNotFoundException(userId);
-                });
+        return mapper.toResponse(findByUserId(userId));
     }
 
     @Override
@@ -81,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDTO update(UUID userId, UserUpdateDTO updateDTO) {
 
-        UserEntity user = searchUser(userId);
+        UserEntity user = findByUserId(userId);
 
         mapper.updateEntity(user, updateDTO);
 
@@ -94,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changePassword(UUID userId, UserChangePasswordDTO passwordDTO) {
 
-        UserEntity user = searchUser(userId);
+        UserEntity user = findByUserId(userId);
 
         if (!passwordEncoder.matches(passwordDTO.currentPassword(), user.getUserPassword())) {
             throw new UserInvalidPasswordException();
@@ -111,7 +104,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(UUID userId) {
 
-        UserEntity user = searchUser(userId);
+        UserEntity user = findByUserId(userId);
 
         user.disable();
 
@@ -129,13 +122,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private UserEntity searchUser(UUID userId) {
+    private UserEntity findByUserId(UUID userId) {
         return repository.findById(userId)
                 .orElseThrow(() -> {
 
                     log.warn("User not found with id: {}", userId);
 
-                    throw new UserNotFoundException(userId);
+                    return new UserNotFoundException(userId);
                 });
     }
 }
