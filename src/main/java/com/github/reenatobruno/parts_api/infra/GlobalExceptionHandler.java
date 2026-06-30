@@ -49,10 +49,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserDataConflictionException.class)
     public ResponseEntity<ProblemDetail> handleDataConfliction(UserDataConflictionException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problem.setTitle("Data conflict");
         problem.setProperty("timestamp", Instant.now());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
     }
 
     @ExceptionHandler(UserEmailAlreadyExistsException.class)
@@ -61,6 +61,14 @@ public class GlobalExceptionHandler {
         problem.setTitle("Email already registered");
         problem.setProperty("timestamp", Instant.now());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
+
+    @ExceptionHandler(UserInvalidPasswordException.class)
+    public ResponseEntity<ProblemDetail> handleUserInvalidPassword(UserInvalidPasswordException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problem.setTitle("Invalid password");
+        problem.setProperty("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
