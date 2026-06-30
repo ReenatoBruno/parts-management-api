@@ -5,6 +5,7 @@ import com.github.reenatobruno.parts_api.util.UserDomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,8 +18,13 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_users")
+@Table(name = "tb_users",
+indexes = {
+        @Index(name = "idx_user_email", columnList = "user_email"),
+        @Index(name = "idx_user_cpf", columnList = "user_cpf")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("account_enabled = true")
 public class UserEntity {
 
     private static final int MAX_NAME_LENGTH = 60;
@@ -186,8 +192,7 @@ public class UserEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserEntity)) return false;
-        UserEntity user = (UserEntity) o;
+        if (!(o instanceof UserEntity user)) return false;
         return userCpf != null && userCpf.equals(user.getUserCpf());
     }
 
