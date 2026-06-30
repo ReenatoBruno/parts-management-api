@@ -28,11 +28,8 @@ indexes = {
 public class UserEntity {
 
     private static final int MAX_NAME_LENGTH = 60;
-
     private static final int MAX_CPF_LENGTH = 11;
-
     private static final int MAX_EMAIL_LENGTH = 150;
-
     private static final int MAX_PASSWORD_LENGTH = 255;
 
     @Id
@@ -176,7 +173,6 @@ public class UserEntity {
     }
 
     public void updateFields(String userName, String userEmail) {
-
         setUserName(userName);
         setUserEmail(userEmail);
     }
