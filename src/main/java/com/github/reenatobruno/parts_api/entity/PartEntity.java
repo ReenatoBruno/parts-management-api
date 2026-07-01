@@ -32,7 +32,7 @@ public class PartEntity {
         private String partNumber;
 
         @Column(name = "part_name", nullable = false, length = MAX_NAME_LENGTH)
-        private String name;
+        private String partName;
 
         @Column(nullable = false, precision = 10, scale = 2)
         private BigDecimal price;
@@ -55,10 +55,10 @@ public class PartEntity {
         private Instant updatedAt;
 
 
-        public PartEntity(String partNumber, String name, BigDecimal price, Integer quantity, String supplier, String description) {
+        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description) {
 
                 setPartNumber(partNumber);
-                setName(name);
+                setPartName(partName);
                 setPrice(price);
                 setQuantity(quantity);
                 setSupplier(supplier);
@@ -77,8 +77,8 @@ public class PartEntity {
                 return price;
         }
 
-        public String getName() {
-                return name;
+        public String getPartName() {
+                return partName;
         }
 
         public Integer getQuantity() {
@@ -102,19 +102,19 @@ public class PartEntity {
         }
 
         private void setPartNumber(String partNumber) {
-                String normalize = PartDomainValidation.normalize(partNumber);
-                String upperCase = normalize != null ? normalize.toUpperCase() : null;
+                String partNumberNormalized = PartDomainValidation.normalize(partNumber);
+                String upperCase = partNumberNormalized != null ? partNumberNormalized.toUpperCase() : null;
                 this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
-        private void setName(String name) {
-                String normalized = PartDomainValidation.normalize(name);
-                this.name = PartDomainValidation.requireNonBlank(normalized, "Part's name", MAX_NAME_LENGTH);
+        private void setPartName(String partName) {
+                String partNameNormalized = PartDomainValidation.normalize(partName);
+                this.partName = PartDomainValidation.requireNonBlank(partNameNormalized, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                BigDecimal normalized = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
-                this.price = PartDomainValidation.requirePositivePrice(normalized, "Part's price");
+                BigDecimal priceNormalized = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
+                this.price = PartDomainValidation.requirePositivePrice(priceNormalized, "Price");
         }
 
         private void setQuantity(Integer quantity) {
@@ -122,18 +122,18 @@ public class PartEntity {
         }
 
         private void setSupplier(String supplier) {
-                String normalized = PartDomainValidation.normalize(supplier);
-                this.supplier = PartDomainValidation.requireNonBlank(normalized, "Supplier", MAX_SUPPLIER_LENGTH);
+                String supplierNormalized = PartDomainValidation.normalize(supplier);
+                this.supplier = PartDomainValidation.requireNonBlank(supplierNormalized, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
         private void setDescription(String description) {
-                String normalized = description != null ? description.strip() : null;
-                this.description = PartDomainValidation.requireNonBlankIfPresent(normalized, "Description", MAX_DESCRIPTION_LENGTH);
+                String descriptionNormalized = description != null ? description.strip() : null;
+                this.description = PartDomainValidation.requireNonBlankIfPresent(descriptionNormalized, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
-        public void updateFields(String name, BigDecimal price, Integer quantity, String supplier, String description) {
+        public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier, String description) {
 
-                setName(name);
+                setPartName(partName);
                 setPrice(price);
                 setQuantity(quantity);
                 setSupplier(supplier);
