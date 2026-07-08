@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PartRepository extends JpaRepository<PartEntity, Long> {
+import java.util.UUID;
+
+public interface PartRepository extends JpaRepository<PartEntity, UUID> {
 
     boolean existsByPartNumber(String partNumber);
 
