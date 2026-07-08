@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class PartServiceImpl implements PartService {
@@ -124,5 +126,9 @@ public class PartServiceImpl implements PartService {
         repository.delete(partEntity);
 
         log.info("Part deleted successfully with ID: {}", id);
+    }
+
+    private PartEntity validatePart(UUID ) {
+        return repository.findById()
     }
 }
