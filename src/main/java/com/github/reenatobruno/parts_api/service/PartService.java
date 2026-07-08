@@ -6,15 +6,17 @@ import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 public interface PartService {
 
     PartResponseDTO create(PartRequestDTO request);
 
-    PartResponseDTO getById(Long id);
+    PartResponseDTO getById(UUID partId);
 
     Page<PartResponseDTO> getAll(String partName, Pageable pageable);
 
-    PartResponseDTO update(Long id, PartUpdateDTO request);
+    PartResponseDTO update(UUID partId, PartUpdateDTO request);
 
-    void delete(Long id);
+    void delete(UUID partId);
 }
