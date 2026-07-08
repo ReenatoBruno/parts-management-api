@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -27,8 +28,8 @@ public class PartEntity {
         private static final int MAX_DESCRIPTION_LENGTH = 500;
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID id;
 
         @Column(nullable = false, unique = true, updatable = false, length = MAX_PART_NUMBER_LENGTH)
         private String partNumber;
@@ -64,7 +65,6 @@ public class PartEntity {
         @Column(name = "part_updated_by", nullable = false)
         private String updatedBy;
 
-
         public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description) {
 
                 setPartNumber(partNumber);
@@ -75,7 +75,7 @@ public class PartEntity {
                 setDescription(description);
         }
 
-        public Long getId() {
+        public UUID getId() {
                 return id;
         }
 
