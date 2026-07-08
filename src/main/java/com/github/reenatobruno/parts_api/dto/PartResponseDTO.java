@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 public record PartResponseDTO (
 
-    @Schema(description = "The product's unique ID", example = "1")
+    @Schema(description = "The product's unique ID", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
     UUID id,
 
     @Schema(description = "The product's unique code or SKU", example = "PROD-001")
@@ -31,11 +31,17 @@ public record PartResponseDTO (
     @Schema(description = "A brief description of the product (optional)" , example = "Stainless steel bolt 1/4 inch")
     String description,
 
-    @Schema(description = "Timestamp when the product was created", example = "2024-01-15T10:30:00")
+    @Schema(description = "Timestamp when the product was created", example = "2024-01-15T10:30:00Z")
     Instant createdAt,
 
-    @Schema(description = "Timestamp when the product was last updated", example = "2023-03-15T11:45:00")
-    Instant updatedAt
+    @Schema(description = "Timestamp when the product was last updated", example = "2023-03-15T11:45:00Z")
+    Instant updatedAt,
+
+    @Schema(description = "User who created the part")
+    String createdBy,
+
+    @Schema(description = "User who last updated the part")
+    String updatedBy
 
 ) {
 }
