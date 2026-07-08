@@ -32,17 +32,17 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional
-    public PartResponseDTO create(PartRequestDTO request) {
+    public PartResponseDTO create(PartRequestDTO requestDTO) {
 
-        log.info("Checking if part number already exists {}", request.partNumber());
+        log.info("Checking if part number already exists {}", requestDTO.partNumber());
 
-        if (repository.existsByPartNumber(request.partNumber())) {
+        if (repository.existsByPartNumber(requestDTO.partNumber())) {
 
-            log.warn("Part number already exists {}", request.partNumber());
+            log.warn("Part number already exists {}", requestDTO.partNumber());
 
-            throw new PartNumberAlreadyExistsException(request.partNumber());
+            throw new PartNumberAlreadyExistsException(requestDTO.partNumber());
         }
-        PartEntity partEntity = mapper.toEntity(request);
+        PartEntity partEntity = mapper.toEntity(requestDTO);
 
         try {
             PartEntity partSaved = repository.save(partEntity);
@@ -53,9 +53,9 @@ public class PartServiceImpl implements PartService {
 
         } catch (DataIntegrityViolationException e) {
 
-            log.error("Database integrity violation while creating part: {}", request.partNumber());
+            log.error("Database integrity violation while creating part: {}", requestDTO.partNumber());
 
-            throw new PartNumberAlreadyExistsException(request.partNumber());
+            throw new PartNumberAlreadyExistsException(requestDTO.partNumber());
         }
     }
 
@@ -84,13 +84,13 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional
-    public PartResponseDTO update(UUID partId, PartUpdateDTO request) {
+    public PartResponseDTO update(UUID partId, PartUpdateDTO requestDTO) {
 
         log.info("Updating part with ID: {}", partId);
 
         PartEntity existingPartEntity = validatePart(partId);
 
-        mapper.updateEntity(existingPartEntity, request);
+        mapper.updateEntity(existingPartEntity, requestDTO);
 
         PartEntity partUpdated = repository.save(existingPartEntity);
 
