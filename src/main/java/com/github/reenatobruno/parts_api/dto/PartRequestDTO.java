@@ -16,7 +16,7 @@ public record PartRequestDTO (
     @Schema(description = "Full commercial name of the part", example = "Steel bolt", maxLength = 100)
     @NotBlank(message = "{part.name.notBlank}")
     @Size(min = 5, max = 100, message = "{part.name.size}")
-    String name,
+    String partName,
 
     @Schema(description = "Selling price per unit", example = "9.99", minimum = "0.01")
     @NotNull(message = "{part.price.notNull}")
