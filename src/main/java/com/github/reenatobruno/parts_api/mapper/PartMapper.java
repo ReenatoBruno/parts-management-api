@@ -11,7 +11,7 @@ public class PartMapper {
     public PartEntity toEntity(PartRequestDTO dto) {
         return new PartEntity(
                 dto.partNumber(),
-                dto.name(),
+                dto.partName(),
                 dto.price(),
                 dto.quantity(),
                 dto.supplier(),
@@ -23,7 +23,7 @@ public class PartMapper {
     return PartResponseDTO.builder()
             .id(partEntity.getId())
             .partNumber(partEntity.getPartNumber())
-            .name(partEntity.getName())
+            .partName(partEntity.getPartName())
             .price(partEntity.getPrice())
             .quantity(partEntity.getQuantity())
             .supplier(partEntity.getSupplier())
@@ -35,7 +35,7 @@ public class PartMapper {
 
     public void updateEntity(PartEntity partEntity, PartUpdateDTO dto) {
         partEntity.updateFields(
-                dto.name(),
+                dto.partName(),
                 dto.price(),
                 dto.quantity(),
                 dto.supplier(),
