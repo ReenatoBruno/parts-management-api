@@ -45,11 +45,11 @@ public class PartServiceImpl implements PartService {
         PartEntity partEntity = mapper.toEntity(request);
 
         try {
-            PartEntity saved = repository.save(partEntity);
+            PartEntity partSaved = repository.save(partEntity);
 
-            log.info("Part created successfully with ID: {} and Part Number: {}", saved.getId(), saved.getPartNumber());
+            log.info("Part created successfully with ID: {} and Part Number: {}", partSaved.getId(), partSaved.getPartNumber());
 
-            return mapper.toResponseDTO(saved);
+            return mapper.toResponseDTO(partSaved);
 
         } catch (DataIntegrityViolationException e) {
 
@@ -61,17 +61,11 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional(readOnly = true)
-    public PartResponseDTO getById(Long id) {
+    public PartResponseDTO getById(UUID partId) {
 
-        log.info("Fetching part with ID: {}", id);
+        log.info("Fetching part with ID: {}", partId);
 
-        return repository.findById(id)
-                .map(mapper::toResponseDTO)
-                .orElseThrow(() -> {
-                    log.warn("Part not found with ID: {}", id);
-
-                    return new PartNotFoundException(id);
-                });
+        return mapper.toResponseDTO(validatePart(partId));
     }
 
     @Override
@@ -90,45 +84,44 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional
-    public PartResponseDTO update(Long id, PartUpdateDTO request) {
+    public PartResponseDTO update(UUID partId, PartUpdateDTO request) {
 
-        log.info("Updating part with ID: {}", id);
+        log.info("Updating part with ID: {}", partId);
 
-        PartEntity existingPartEntity = repository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Part not found for update with ID: {}", id);
-
-                    return new PartNotFoundException(id);
-                });
+        PartEntity existingPartEntity = validatePart(partId);
 
         mapper.updateEntity(existingPartEntity, request);
 
-        PartEntity updated = repository.save(existingPartEntity);
+        PartEntity partUpdated = repository.save(existingPartEntity);
 
-        log.info("Part updated successfully with ID: {}", id);
+        log.info("Part updated successfully with ID: {}", partId);
 
-        return mapper.toResponseDTO(updated);
+        return mapper.toResponseDTO(partUpdated);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID partId) {
 
-        log.info("Deleting part with ID: {}", id);
+        log.info("Deleting part with ID: {}", partId);
 
-        PartEntity partEntity = repository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Part not found for deletion with ID: {}", id);
+        PartEntity part = validatePart(partId);
 
-                    return new PartNotFoundException(id);
-                });
+        part.deactivate();
 
-        repository.delete(partEntity);
+        repository.save(part);
 
-        log.info("Part deleted successfully with ID: {}", id);
+        log.info("Part deleted successfully with ID: {}", partId);
     }
 
-    private PartEntity validatePart(UUID ) {
-        return repository.findById()
+    private PartEntity validatePart(UUID partId) {
+        return repository.findById(partId)
+                .orElseThrow(() -> {
+
+                    log.warn("Part not found for deletion with ID: {}", partId);
+
+                    return new PartNotFoundException(partId);
+                });
+
     }
 }
