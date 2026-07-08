@@ -49,6 +49,9 @@ public class PartEntity {
         @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
         private String description;
 
+        @Column(name = "part_active", nullable = false)
+        private boolean active = true;
+
         @CreatedDate
         @Column(name = "part_created_at", updatable = false, nullable = false)
         private Instant createdAt;
@@ -73,6 +76,7 @@ public class PartEntity {
                 setQuantity(quantity);
                 setSupplier(supplier);
                 setDescription(description);
+                this.active = true;
         }
 
         public UUID getId() {
@@ -102,6 +106,8 @@ public class PartEntity {
         public String getDescription() {
                 return description;
         }
+
+        public boolean isActive() { return active; }
 
         public Instant getCreatedAt() {
                 return createdAt;
@@ -141,6 +147,10 @@ public class PartEntity {
                 this.description = PartDomainValidation.requireNonBlankIfPresent(descriptionNormalized, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
+        public void deactivate() {
+                this.active = false;
+        }
+
         public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier, String description) {
 
                 setPartName(partName);
@@ -161,4 +171,5 @@ public class PartEntity {
         public int hashCode() {
                 return Objects.hash(partNumber);
         }
+
 }
