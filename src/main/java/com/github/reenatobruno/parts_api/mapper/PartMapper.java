@@ -30,6 +30,8 @@ public class PartMapper {
             .description(partEntity.getDescription())
             .createdAt(partEntity.getCreatedAt())
             .updatedAt(partEntity.getUpdatedAt())
+            .createdBy(partEntity.getCreatedBy())
+            .updatedBy(partEntity.getUpdatedBy())
             .build();
     }
 
