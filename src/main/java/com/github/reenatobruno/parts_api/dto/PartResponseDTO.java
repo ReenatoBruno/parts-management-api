@@ -16,7 +16,7 @@ public record PartResponseDTO (
     String partNumber,
 
     @Schema(description = "The name of the product", example = "Steel bolt")
-    String name,
+    String partName,
 
     @Schema(description = "The price per unit", example = "9.99")
     BigDecimal price,
