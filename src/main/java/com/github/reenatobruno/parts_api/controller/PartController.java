@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/parts")
@@ -41,7 +42,7 @@ public class PartController implements PartControllerOpenApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<PartResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<PartResponseDTO> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(partService.getById(id));
     }
 
@@ -57,7 +58,7 @@ public class PartController implements PartControllerOpenApi {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<PartResponseDTO> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Valid @RequestBody PartUpdateDTO request) {
 
         return ResponseEntity.ok(partService.update(id, request));
@@ -65,7 +66,7 @@ public class PartController implements PartControllerOpenApi {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
 
         partService.delete(id);
 
