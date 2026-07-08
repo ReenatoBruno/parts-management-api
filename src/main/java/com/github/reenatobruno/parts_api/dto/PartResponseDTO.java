@@ -5,12 +5,13 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder
 public record PartResponseDTO (
 
     @Schema(description = "The product's unique ID", example = "1")
-    Long id,
+    UUID id,
 
     @Schema(description = "The product's unique code or SKU", example = "PROD-001")
     String partNumber,
@@ -35,5 +36,6 @@ public record PartResponseDTO (
 
     @Schema(description = "Timestamp when the product was last updated", example = "2023-03-15T11:45:00")
     Instant updatedAt
+
 ) {
 }
