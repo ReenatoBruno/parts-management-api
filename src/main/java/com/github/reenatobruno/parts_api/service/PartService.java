@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface PartService {
 
-    PartResponseDTO create(PartRequestDTO request);
+    PartResponseDTO create(PartRequestDTO requestDTO);
 
     PartResponseDTO getById(UUID partId);
 
     Page<PartResponseDTO> getAll(String partName, Pageable pageable);
 
-    PartResponseDTO update(UUID partId, PartUpdateDTO request);
+    PartResponseDTO update(UUID partId, PartUpdateDTO requestDTO);
 
     void delete(UUID partId);
 }
