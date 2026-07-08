@@ -2,8 +2,8 @@ package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.util.PartDomainValidation;
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,8 +18,12 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_parts")
+@Table(name = "tb_parts",
+indexes = {
+        @Index(name = "idx_part_number", columnList = "part_number")
+})
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SQLRestriction("active = true")
 public class PartEntity {
 
         private static final int MAX_PART_NUMBER_LENGTH = 50;
@@ -116,6 +120,10 @@ public class PartEntity {
         public Instant getUpdatedAt() {
                 return updatedAt;
         }
+
+        public String getCreatedBy() { return createdBy; }
+
+        public String getUpdatedBy() { return updatedBy; }
 
         private void setPartNumber(String partNumber) {
                 String partNumberNormalized = PartDomainValidation.normalize(partNumber);
