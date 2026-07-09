@@ -160,7 +160,10 @@ public class PartEntity {
 
         private void setDescription(String description) {
                 String normalizedDescription = description != null ? description.strip() : null;
-                this.description = PartDomainValidation.requireNonBlankIfPresent(normalizedDescription, "Description", MAX_DESCRIPTION_LENGTH);
+                String capitalizedFirst = normalizedDescription != null
+                        ? normalizedDescription.substring(0, 1).toUpperCase() + normalizedDescription.substring(1).toLowerCase()
+                        : null;
+                this.description = PartDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         public void deactivate() {
