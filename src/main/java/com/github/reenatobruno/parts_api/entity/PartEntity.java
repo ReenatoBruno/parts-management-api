@@ -159,7 +159,7 @@ public class PartEntity {
         }
 
         private void setDescription(String description) {
-                String normalizedDescription = description != null ? description.strip() : null;
+                String normalizedDescription = PartDomainValidation.normalize(description);
                 String capitalizedFirst = normalizedDescription != null
                         ? normalizedDescription.substring(0, 1).toUpperCase() + normalizedDescription.substring(1).toLowerCase()
                         : null;
