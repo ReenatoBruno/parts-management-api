@@ -1,6 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.util.PartDomainValidation;
+import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
@@ -29,10 +30,11 @@ public class PartEntity {
         private static final int MAX_PART_NUMBER_LENGTH = 50;
         private static final int MAX_NAME_LENGTH = 100;
         private static final int MAX_SUPPLIER_LENGTH = 100;
-        private static final int MAX_DESCRIPTION_LENGTH = 500;
+        private static final int MAX_DESCRIPTION_LENGTH = 255;
 
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
+        @Column(name = "part_id")
         private UUID id;
 
         @Column(nullable = false, unique = true, updatable = false, length = MAX_PART_NUMBER_LENGTH)
@@ -137,7 +139,8 @@ public class PartEntity {
 
         private void setPartName(String partName) {
                 String normalizedPartName = PartDomainValidation.normalize(partName);
-                this.partName = PartDomainValidation.requireNonBlank(normalizedPartName, "Part name", MAX_NAME_LENGTH);
+                String capitalized = StringUtils.capitalize(normalizedPartName);
+                this.partName = PartDomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
@@ -151,7 +154,8 @@ public class PartEntity {
 
         private void setSupplier(String supplier) {
                 String normalizedSupplier = PartDomainValidation.normalize(supplier);
-                this.supplier = PartDomainValidation.requireNonBlank(normalizedSupplier, "Supplier", MAX_SUPPLIER_LENGTH);
+                String capitalized = StringUtils.capitalize(normalizedSupplier);
+                this.supplier = PartDomainValidation.requireNonBlank(capitalized, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
         private void setDescription(String description) {
