@@ -126,19 +126,19 @@ public class PartEntity {
         public String getUpdatedBy() { return updatedBy; }
 
         private void setPartNumber(String partNumber) {
-                String partNumberNormalized = PartDomainValidation.normalize(partNumber);
-                String upperCase = partNumberNormalized != null ? partNumberNormalized.toUpperCase() : null;
+                String normalizedPartNumber = PartDomainValidation.normalize(partNumber);
+                String upperCase = normalizedPartNumber != null ? normalizedPartNumber.toUpperCase() : null;
                 this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setPartName(String partName) {
-                String partNameNormalized = PartDomainValidation.normalize(partName);
-                this.partName = PartDomainValidation.requireNonBlank(partNameNormalized, "Part name", MAX_NAME_LENGTH);
+                String normalizedPartName = PartDomainValidation.normalize(partName);
+                this.partName = PartDomainValidation.requireNonBlank(normalizedPartName, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                BigDecimal priceNormalized = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
-                this.price = PartDomainValidation.requirePositivePrice(priceNormalized, "Price");
+                BigDecimal normalizedPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
+                this.price = PartDomainValidation.requirePositivePrice(normalizedPrice, "Price");
         }
 
         private void setQuantity(Integer quantity) {
@@ -146,13 +146,13 @@ public class PartEntity {
         }
 
         private void setSupplier(String supplier) {
-                String supplierNormalized = PartDomainValidation.normalize(supplier);
-                this.supplier = PartDomainValidation.requireNonBlank(supplierNormalized, "Supplier", MAX_SUPPLIER_LENGTH);
+                String normalizedSupplier = PartDomainValidation.normalize(supplier);
+                this.supplier = PartDomainValidation.requireNonBlank(normalizedSupplier, "Supplier", MAX_SUPPLIER_LENGTH);
         }
 
         private void setDescription(String description) {
-                String descriptionNormalized = description != null ? description.strip() : null;
-                this.description = PartDomainValidation.requireNonBlankIfPresent(descriptionNormalized, "Description", MAX_DESCRIPTION_LENGTH);
+                String normalizedDescription = description != null ? description.strip() : null;
+                this.description = PartDomainValidation.requireNonBlankIfPresent(normalizedDescription, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         public void deactivate() {
