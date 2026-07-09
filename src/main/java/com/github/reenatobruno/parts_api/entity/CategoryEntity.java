@@ -1,6 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.util.CategoryDomainValidation;
+import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,8 @@ indexes = {
 @SQLRestriction("active = true")
 public class CategoryEntity {
 
-    private static final int MAX_NAME_LENGTH = 50;
-    private static final int MAX_DESCRIPTION_LENGTH = 100;
+    private static final int MAX_NAME_LENGTH = 60;
+    private static final int MAX_DESCRIPTION_LENGTH = 255;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -99,8 +100,8 @@ public class CategoryEntity {
 
     private void setCategoryName(String categoryName) {
         String normalizedCategoryName = CategoryDomainValidation.normalize(categoryName);
-        String upperCase = normalizedCategoryName != null ? normalizedCategoryName.toUpperCase() : null;
-        this.categoryName = CategoryDomainValidation.requireNonBlank(upperCase, "Category Name", MAX_NAME_LENGTH);
+        String capitalized = StringUtils.capitalize(normalizedCategoryName);
+        this.categoryName = CategoryDomainValidation.requireNonBlank(capitalized, "Category Name", MAX_NAME_LENGTH);
     }
 
     private void setCategoryDescription(String categoryDescription) {
