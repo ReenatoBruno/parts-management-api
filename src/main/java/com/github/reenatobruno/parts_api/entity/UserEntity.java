@@ -66,19 +66,19 @@ public class UserEntity {
     private boolean accountEnabled = true;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "user_created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "user_updated_at", nullable = false)
     private Instant updatedAt;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "user_created_by", nullable = false, updatable = false)
     private String createdBy;
 
     @LastModifiedBy
-    @Column(name = "updated_by", nullable = false)
+    @Column(name = "user_updated_by", nullable = false)
     private String updatedBy;
 
     public UserEntity(String userName, String userCpf, String userEmail, String userPassword) {
