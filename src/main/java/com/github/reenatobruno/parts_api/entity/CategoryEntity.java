@@ -106,7 +106,10 @@ public class CategoryEntity {
 
     private void setCategoryDescription(String categoryDescription) {
         String normalizeCategoryDescription = CategoryDomainValidation.normalize(categoryDescription);
-        this.categoryDescription = CategoryDomainValidation.requireNonBlankIfPresent(normalizeCategoryDescription, "Category Description", MAX_DESCRIPTION_LENGTH);
+        String capitalizedFirst = normalizeCategoryDescription != null
+                ? normalizeCategoryDescription.substring(0, 1).toUpperCase() + normalizeCategoryDescription.substring(1).toLowerCase()
+                : null;
+        this.categoryDescription = CategoryDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Category Description", MAX_DESCRIPTION_LENGTH);
     }
 
     public void deactivate() {
