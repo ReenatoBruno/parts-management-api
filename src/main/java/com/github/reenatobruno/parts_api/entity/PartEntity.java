@@ -54,10 +54,14 @@ public class PartEntity {
         private String description;
 
         @Column(name = "part_active", nullable = false)
-        private boolean active = true;
+        private boolean active;
+
+        @ManyToOne
+        @JoinColumn(name = "category_id", nullable = false)
+        private CategoryEntity category;
 
         @CreatedDate
-        @Column(name = "part_created_at", updatable = false, nullable = false)
+        @Column(name = "part_created_at", nullable = false, updatable = false)
         private Instant createdAt;
 
         @LastModifiedDate
