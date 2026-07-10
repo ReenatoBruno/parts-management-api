@@ -64,7 +64,7 @@ public class PartServiceImpl implements PartService {
 
         } catch (DataIntegrityViolationException e) {
 
-            log.error("Database integrity violation while creating part: {}", requestDTO.partNumber());
+            log.error("Database integrity violation while creating part: {}", requestDTO.partNumber(), e);
 
             throw new PartNumberAlreadyExistsException(requestDTO.partNumber());
         }
