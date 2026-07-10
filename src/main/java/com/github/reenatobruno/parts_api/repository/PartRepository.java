@@ -12,7 +12,7 @@ public interface PartRepository extends JpaRepository<PartEntity, UUID> {
 
     boolean existsByPartNumber(String partNumber);
 
-    Page<PartEntity> findAllByNameContainingIgnoreCase(String partName, Pageable pageable);
+    Page<PartEntity> findAllByPartNameContainingIgnoreCase(String partName, Pageable pageable);
 
     boolean existsByCategory(CategoryEntity category);
 }
