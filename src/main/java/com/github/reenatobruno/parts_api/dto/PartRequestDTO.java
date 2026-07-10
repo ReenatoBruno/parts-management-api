@@ -34,8 +34,8 @@ public record PartRequestDTO (
     @Size(min = 5, max = 100, message = "{part.supplier.size}")
     String supplier,
 
-    @Schema(description = "Technical specifications and features of the product", example = "Stainless steel bolt 1/4 inch", maxLength = 400)
-    @Size(min = 5, max = 500, message = "{part.description.size}")
+    @Schema(description = "Technical specifications and features of the product", example = "Stainless steel bolt 1/4 inch", maxLength = 255)
+    @Size(max = 255, message = "{part.description.size}")
     String description
 ) {
 }
