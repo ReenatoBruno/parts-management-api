@@ -31,7 +31,7 @@ public record PartResponseDTO (
     @Schema(description = "A brief description of the product (optional)" , example = "Stainless steel bolt 1/4 inch")
     String description,
 
-    @Schema(description = "Category unique ID", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    @Schema(description = "Category unique ID", example = "f56ac10b-58cc-4372-a567-0e02b2c3d470")
     UUID categoryId,
 
     @Schema(description = "Category name", example = "Engine")
