@@ -1,5 +1,6 @@
 package com.github.reenatobruno.parts_api.repository;
 
+import com.github.reenatobruno.parts_api.entity.CategoryEntity;
 import com.github.reenatobruno.parts_api.entity.PartEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,4 +13,6 @@ public interface PartRepository extends JpaRepository<PartEntity, UUID> {
     boolean existsByPartNumber(String partNumber);
 
     Page<PartEntity> findAllByNameContainingIgnoreCase(String partName, Pageable pageable);
+
+    boolean existsByCategory(CategoryEntity category);
 }
