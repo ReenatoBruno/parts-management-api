@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,6 +29,7 @@ public class PartController implements PartControllerOpenApi {
 
     @Override
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PartResponseDTO> create(@Valid @RequestBody PartRequestDTO request) {
 
         PartResponseDTO response = partService.create(request);
@@ -57,6 +59,7 @@ public class PartController implements PartControllerOpenApi {
 
     @Override
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PartResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody PartUpdateDTO request) {
@@ -66,6 +69,7 @@ public class PartController implements PartControllerOpenApi {
 
     @Override
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
 
         partService.delete(id);
