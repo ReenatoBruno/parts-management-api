@@ -90,7 +90,7 @@ public class PartEntity {
                 this.active = true;
         }
 
-        public UUID getId() {
+        public UUID getPartId() {
                 return partId;
         }
 
