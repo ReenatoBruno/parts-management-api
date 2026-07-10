@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record PartRequestDTO (
 
@@ -36,7 +37,11 @@ public record PartRequestDTO (
 
     @Schema(description = "Technical specifications and features of the product", example = "Stainless steel bolt 1/4 inch", maxLength = 255)
     @Size(max = 255, message = "{part.description.size}")
-    String description
+    String description,
+
+    @Schema(description = "Category ID that the part belongs to", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    @NotNull(message = "{part.categoryId.notNull}")
+    UUID categoryId
 ) {
 }
 
