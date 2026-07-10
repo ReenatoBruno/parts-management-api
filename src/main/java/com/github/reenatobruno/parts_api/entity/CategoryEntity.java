@@ -3,7 +3,6 @@ package com.github.reenatobruno.parts_api.entity;
 import com.github.reenatobruno.parts_api.util.CategoryDomainValidation;
 import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
