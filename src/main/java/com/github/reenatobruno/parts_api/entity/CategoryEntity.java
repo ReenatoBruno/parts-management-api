@@ -82,13 +82,9 @@ public class CategoryEntity {
         return updatedAt;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+    public String getCreatedBy() { return createdBy; }
 
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
+    public String getUpdatedBy() { return updatedBy; }
 
     public CategoryEntity(String categoryName, String categoryDescription) {
 
