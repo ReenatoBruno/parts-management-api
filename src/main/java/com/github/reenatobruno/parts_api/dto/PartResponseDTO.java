@@ -31,6 +31,12 @@ public record PartResponseDTO (
     @Schema(description = "A brief description of the product (optional)" , example = "Stainless steel bolt 1/4 inch")
     String description,
 
+    @Schema(description = "Category unique ID", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    UUID categoryId,
+
+    @Schema(description = "Category name", example = "Engine")
+    String categoryName,
+
     @Schema(description = "Timestamp when the product was created", example = "2024-01-15T10:30:00Z")
     Instant createdAt,
 
