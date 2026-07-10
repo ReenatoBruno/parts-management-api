@@ -78,7 +78,7 @@ public class PartEntity {
         @Column(name = "part_updated_by", nullable = false)
         private String updatedBy;
 
-        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description) {
+        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description, CategoryEntity category) {
 
                 setPartNumber(partNumber);
                 setPartName(partName);
@@ -86,6 +86,7 @@ public class PartEntity {
                 setQuantity(quantity);
                 setSupplier(supplier);
                 setDescription(description);
+                setCategory(category);
                 this.active = true;
         }
 
@@ -115,6 +116,10 @@ public class PartEntity {
 
         public String getDescription() {
                 return description;
+        }
+
+        public CategoryEntity getCategory() {
+                return category;
         }
 
         public boolean isActive() { return active; }
@@ -164,6 +169,10 @@ public class PartEntity {
                         ? normalizedDescription.substring(0, 1).toUpperCase() + normalizedDescription.substring(1).toLowerCase()
                         : null;
                 this.description = PartDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
+        }
+
+        private void setCategory(CategoryEntity category) {
+                this.category = category;
         }
 
         public void deactivate() {
