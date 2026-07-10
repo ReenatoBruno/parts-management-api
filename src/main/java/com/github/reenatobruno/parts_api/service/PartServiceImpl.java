@@ -76,7 +76,7 @@ public class PartServiceImpl implements PartService {
 
         log.info("Fetching part with ID: {}", partId);
 
-        return mapper.toResponseDTO(validatePart(partId));
+        return mapper.toResponseDTO(findByPartId(partId));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class PartServiceImpl implements PartService {
 
         log.info("Updating part with ID: {}", partId);
 
-        PartEntity existingPartEntity = validatePart(partId);
+        PartEntity existingPartEntity = findByPartId(partId);
 
         mapper.updateEntity(existingPartEntity, requestDTO);
 
@@ -116,7 +116,7 @@ public class PartServiceImpl implements PartService {
 
         log.info("Deleting part with ID: {}", partId);
 
-        PartEntity part = validatePart(partId);
+        PartEntity part = findByPartId(partId);
 
         part.deactivate();
 
@@ -125,7 +125,7 @@ public class PartServiceImpl implements PartService {
         log.info("Part deleted successfully with ID: {}", partId);
     }
 
-    private PartEntity validatePart(UUID partId) {
+    private PartEntity findByPartId(UUID partId) {
         return repository.findById(partId)
                 .orElseThrow(() -> {
 
