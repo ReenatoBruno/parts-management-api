@@ -35,6 +35,7 @@ public class PartServiceImpl implements PartService {
         this.categoryRepository = categoryRepository;
 
     }
+
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO requestDTO) {
@@ -50,7 +51,8 @@ public class PartServiceImpl implements PartService {
 
         CategoryEntity category = categoryRepository.findById(requestDTO.categoryId())
                 .orElseThrow(() -> {
-                    throw new CategoryNotFoundException(requestDTO.categoryId());
+                    log.warn("Category not found with ID: {}", requestDTO.categoryId());
+                    return new CategoryNotFoundException(requestDTO.categoryId());
                 });
 
         PartEntity partEntity = mapper.toEntity(requestDTO, category);
@@ -58,7 +60,7 @@ public class PartServiceImpl implements PartService {
         try {
             PartEntity partSaved = repository.save(partEntity);
 
-            log.info("Part created successfully with ID: {} and Part Number: {}", partSaved.getId(), partSaved.getPartNumber());
+            log.info("Part created successfully with ID: {} and Part Number: {}", partSaved.getPartId(), partSaved.getPartNumber());
 
             return mapper.toResponseDTO(partSaved);
 
@@ -89,7 +91,7 @@ public class PartServiceImpl implements PartService {
             return repository.findAll(pageable)
                     .map(mapper::toResponseDTO);
         }
-        return repository.findAllByNameContainingIgnoreCase(partName, pageable)
+        return repository.findAllByPartNameContainingIgnoreCase(partName, pageable)
                 .map(mapper::toResponseDTO);
     }
 
