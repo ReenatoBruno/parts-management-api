@@ -35,7 +35,7 @@ public class PartEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
         @Column(name = "part_id")
-        private UUID id;
+        private UUID partId;
 
         @Column(nullable = false, unique = true, updatable = false, length = MAX_PART_NUMBER_LENGTH)
         private String partNumber;
@@ -91,7 +91,7 @@ public class PartEntity {
         }
 
         public UUID getId() {
-                return id;
+                return partId;
         }
 
         public String getPartNumber() {
