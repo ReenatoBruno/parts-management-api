@@ -3,10 +3,13 @@ package com.github.reenatobruno.parts_api.service;
 import com.github.reenatobruno.parts_api.dto.PartRequestDTO;
 import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
+import com.github.reenatobruno.parts_api.entity.CategoryEntity;
 import com.github.reenatobruno.parts_api.entity.PartEntity;
+import com.github.reenatobruno.parts_api.exception.CategoryNotFoundException;
 import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
 import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
+import com.github.reenatobruno.parts_api.repository.CategoryRepository;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,13 +26,15 @@ public class PartServiceImpl implements PartService {
 
     private final PartRepository repository;
     private final PartMapper mapper;
+    private final CategoryRepository categoryRepository;
 
-    public PartServiceImpl(PartRepository repository, PartMapper mapper) {
+    public PartServiceImpl(PartRepository repository, PartMapper mapper, CategoryRepository categoryRepository ) {
 
         this.repository = repository;
         this.mapper = mapper;
-    }
+        this.categoryRepository = categoryRepository;
 
+    }
     @Override
     @Transactional
     public PartResponseDTO create(PartRequestDTO requestDTO) {
@@ -42,7 +47,13 @@ public class PartServiceImpl implements PartService {
 
             throw new PartNumberAlreadyExistsException(requestDTO.partNumber());
         }
-        PartEntity partEntity = mapper.toEntity(requestDTO);
+
+        CategoryEntity category = categoryRepository.findById(requestDTO.categoryId())
+                .orElseThrow(() -> {
+                    throw new CategoryNotFoundException(requestDTO.categoryId());
+                });
+
+        PartEntity partEntity = mapper.toEntity(requestDTO, category);
 
         try {
             PartEntity partSaved = repository.save(partEntity);
