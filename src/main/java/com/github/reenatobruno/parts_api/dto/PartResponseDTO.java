@@ -1,6 +1,7 @@
 package com.github.reenatobruno.parts_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.util.UUID;
 public record PartResponseDTO (
 
     @Schema(description = "The product's unique ID", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
-    UUID id,
+    UUID partId,
 
     @Schema(description = "The product's unique code or SKU", example = "PROD-001")
     String partNumber,
