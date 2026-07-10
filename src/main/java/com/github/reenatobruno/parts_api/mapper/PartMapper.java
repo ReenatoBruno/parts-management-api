@@ -23,7 +23,7 @@ public class PartMapper {
 
     public PartResponseDTO toResponseDTO(PartEntity partEntity) {
     return PartResponseDTO.builder()
-            .id(partEntity.getId())
+            .partId(partEntity.getPartId())
             .partNumber(partEntity.getPartNumber())
             .partName(partEntity.getPartName())
             .price(partEntity.getPrice())
