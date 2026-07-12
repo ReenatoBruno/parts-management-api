@@ -19,6 +19,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.UUID;
+
 @Tag(name = "Part Controller", description = "Endpoints for API managing parts")
 public interface PartControllerOpenApi {
 
@@ -71,7 +73,7 @@ public interface PartControllerOpenApi {
                             description = "Internal server error")
             }
     )
-    ResponseEntity<PartResponseDTO> getById(@Parameter(description = "Part ID")@PathVariable Long id);
+    ResponseEntity<PartResponseDTO> getById(@Parameter(description = "Part ID")@PathVariable UUID id);
 
     @Operation(
             summary = "List all parts with pagination",
@@ -122,7 +124,7 @@ public interface PartControllerOpenApi {
                     )
             }
     )
-    ResponseEntity<PartResponseDTO> update(@Parameter(description = "ID of the part to be updated") @PathVariable Long id, @Valid @RequestBody PartUpdateDTO request);
+    ResponseEntity<PartResponseDTO> update(@Parameter(description = "ID of the part to be updated") @PathVariable UUID id, @Valid @RequestBody PartUpdateDTO request);
 
     @Operation(
             summary = "Delete a part by ID",
@@ -143,5 +145,5 @@ public interface PartControllerOpenApi {
                             description = "Internal server error")
             }
     )
-    ResponseEntity<Void> delete(@Parameter(description = "ID of the part to be deleted")@PathVariable Long id);
+    ResponseEntity<Void> delete(@Parameter(description = "ID of the part to be deleted")@PathVariable UUID id);
 }

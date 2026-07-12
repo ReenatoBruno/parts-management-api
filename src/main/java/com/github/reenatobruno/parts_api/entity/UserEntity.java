@@ -5,6 +5,7 @@ import com.github.reenatobruno.parts_api.util.UserDomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,16 +18,18 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_users")
+@Table(name = "tb_users",
+indexes = {
+        @Index(name = "idx_user_email", columnList = "user_email"),
+        @Index(name = "idx_user_cpf", columnList = "user_cpf")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("account_enabled = true")
 public class UserEntity {
 
     private static final int MAX_NAME_LENGTH = 60;
-
     private static final int MAX_CPF_LENGTH = 11;
-
     private static final int MAX_EMAIL_LENGTH = 150;
-
     private static final int MAX_PASSWORD_LENGTH = 255;
 
     @Id
@@ -63,19 +66,19 @@ public class UserEntity {
     private boolean accountEnabled = true;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "user_created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "user_updated_at", nullable = false)
     private Instant updatedAt;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "user_created_by", nullable = false, updatable = false)
     private String createdBy;
 
     @LastModifiedBy
-    @Column(name = "updated_by", nullable = false)
+    @Column(name = "user_updated_by", nullable = false)
     private String updatedBy;
 
     public UserEntity(String userName, String userCpf, String userEmail, String userPassword) {
@@ -170,7 +173,6 @@ public class UserEntity {
     }
 
     public void updateFields(String userName, String userEmail) {
-
         setUserName(userName);
         setUserEmail(userEmail);
     }
@@ -186,8 +188,7 @@ public class UserEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserEntity)) return false;
-        UserEntity user = (UserEntity) o;
+        if (!(o instanceof UserEntity user)) return false;
         return userCpf != null && userCpf.equals(user.getUserCpf());
     }
 

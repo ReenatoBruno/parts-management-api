@@ -9,7 +9,7 @@ public record PartUpdateDTO (
     @Schema(description = "The name of the product", example = "Steel bolt")
     @NotBlank(message = "{part.name.notBlank}")
     @Size(min = 5, max = 100, message = "{part.name.size}")
-    String name,
+    String partName,
 
     @Schema(description = "The price per unit", example = "9.99")
     @NotNull(message = "{part.price.notNull}")
