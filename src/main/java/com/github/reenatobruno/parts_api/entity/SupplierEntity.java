@@ -20,7 +20,7 @@ import java.util.UUID;
 @Table(name = "tb_supplier",
 indexes = {
         @Index(name = "idx_supplier_cnpj", columnList = "supplier_cnpj"),
-        @Index(name = "idx_email", columnList = "supplier_email")
+        @Index(name = "idx_trade_name", columnList = "trade_name")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("active = true")
@@ -31,48 +31,49 @@ public class SupplierEntity {
     private static final int MAX_TRADE_NAME_LENGTH = 150;
     private static final int MAX_EMAIL_LENGTH = 150;
     private static final int MAX_PHONE_LENGTH = 15;
-    private static final int MAX_CEP_LENGTH = 8;
+    private static final int MAX_ZIP_LENGTH = 8;
     private static final int MAX_STREET_LENGTH = 150;
     private static final int MAX_NUMBER_LENGTH = 10;
     private static final int MAX_COMPLEMENT_LENGTH = 50;
-    private static final int MAX_NEIGHBORHOOD_LENGTH = 100;
-    private static final int MAX_CITY_LENGTH = 100;
+    private static final int MAX_DISTRICT_LENGTH = 50;
+    private static final int MAX_CITY_LENGTH = 50;
     private static final int MAX_STATE_LENGTH = 2;
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "supplier_id")
     private UUID supplierId;
 
     @Column(name = "supplier_cnpj", nullable = false, unique = true, length = MAX_CNPJ_LENGTH)
     private String cnpj;
 
-    @Column(name = "supplier_company_name", nullable = false, length = MAX_COMPANY_NAME_LENGTH)
+    @Column(name = "supplier_name", nullable = false, length = MAX_COMPANY_NAME_LENGTH)
     private String companyName;
 
-    @Column(name = "trade_name", nullable = false, length = MAX_TRADE_NAME_LENGTH)
+    @Column(name = "trade_name", nullable = false, unique = true, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
 
-    @Column(name = "supplier_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
+    @Column(name = "supplier_email", nullable = false, length = MAX_EMAIL_LENGTH)
     private String email;
 
     @Column(name = "supplier_phone", nullable = false, length = MAX_PHONE_LENGTH)
     private String phone;
 
-    @Column(nullable = false, length = MAX_CEP_LENGTH)
-    private String cep;
+    @Column(nullable = false, length = MAX_ZIP_LENGTH)
+    private String zip;
 
     @Column(nullable = false, length = MAX_STREET_LENGTH)
     private String street;
 
-    @Column(nullable = false, length = MAX_NUMBER_LENGTH)
+    @Column(name = "house_number", nullable = false, length = MAX_NUMBER_LENGTH)
     private String number;
 
     @Column(nullable = false, length = MAX_COMPLEMENT_LENGTH)
     private String complement;
 
-    @Column(nullable = false, length = MAX_NEIGHBORHOOD_LENGTH)
-    private String neighborhood;
+    @Column(nullable = false, length = MAX_DISTRICT_LENGTH)
+    private String district;
 
     @Column(nullable = false, length = MAX_CITY_LENGTH)
     private String city;
@@ -99,18 +100,18 @@ public class SupplierEntity {
     @Column(name = "supplier_updated_by", nullable = false)
     private String updated_by;
 
-    public SupplierEntity(String cnpj, String companyName, String tradeName, String email, String phone, String cep, String street, String number, String complement, String neighborhood, String city, String state) {
+    public SupplierEntity(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
 
         setCnpj(cnpj);
         setCompanyName(companyName);
         setTradeName(tradeName);
         setEmail(email);
         setPhone(phone);
-        setCep(cep);
+        setZip(zip);
         setStreet(street);
         setNumber(number);
         setComplement(complement);
-        setNeighborhood(neighborhood);
+        setDistrict(district);
         setCity(city);
         setState(state);
         this.active = true;
@@ -138,8 +139,8 @@ public class SupplierEntity {
         return phone;
     }
 
-    public String getCep() {
-        return cep;
+    public String getZip() {
+        return zip;
     }
 
     public String getStreet() {
@@ -154,8 +155,8 @@ public class SupplierEntity {
         return complement;
     }
 
-    public String getNeighborhood() {
-        return neighborhood;
+    public String getDistrict() {
+        return district;
     }
 
     public String getCity() {
@@ -204,18 +205,18 @@ public class SupplierEntity {
         this.active = false;
     }
 
-    public void updateFields(String cnpj, String companyName, String tradeName, String email, String phone, String cep, String street, String number, String complement, String neighborhood, String city, String state) {
+    public void updateFields(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
 
         setCnpj(cnpj);
         setCompanyName(companyName);
         setTradeName(tradeName);
         setEmail(email);
         setPhone(phone);
-        setCep(cep);
+        setZip(zip);
         setStreet(street);
         setNumber(number);
         setComplement(complement);
-        setNeighborhood(neighborhood);
+        setDistrict(district);
         setCity(city);
         setState(state);
     }
