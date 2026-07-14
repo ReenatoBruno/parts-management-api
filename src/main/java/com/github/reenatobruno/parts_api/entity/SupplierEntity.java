@@ -69,7 +69,7 @@ public class SupplierEntity {
     @Column(name = "house_number", nullable = false, length = MAX_NUMBER_LENGTH)
     private String number;
 
-    @Column(nullable = false, length = MAX_COMPLEMENT_LENGTH)
+    @Column(length = MAX_COMPLEMENT_LENGTH)
     private String complement;
 
     @Column(nullable = false, length = MAX_DISTRICT_LENGTH)
@@ -86,19 +86,19 @@ public class SupplierEntity {
 
     @CreatedDate
     @Column(name = "supplier_created_at", nullable = false, updatable = false)
-    private Instant created_at;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(name = "supplier_updated_at", nullable = false)
-    private Instant updated_at;
+    private Instant updatedAt;
 
     @CreatedBy
     @Column(name = "supplier_created_by", nullable = false, updatable = false)
-    private String created_by;
+    private String createdBy;
 
     @LastModifiedBy
     @Column(name = "supplier_updated_by", nullable = false)
-    private String updated_by;
+    private String updatedBy;
 
     public SupplierEntity(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
 
@@ -171,17 +171,17 @@ public class SupplierEntity {
         return active;
     }
 
-    public Instant getCreated_at() { return created_at; }
+    public Instant getCreatedAt() { return createdAt; }
 
-    public Instant getUpdated_at() {
-        return updated_at;
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
-    public String getCreated_by() {
-        return created_by;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public String getUpdated_by() { return updated_by; }
+    public String getUpdatedBy() { return updatedBy; }
 
     private void setCnpj(String cnpj) {
         String stripCnpj = SupplierDomainValidation.normalize(cnpj);
@@ -194,7 +194,7 @@ public class SupplierEntity {
     }
 
     private void setTradeName(String tradeName) {
-        String stripTradeName = SupplierDomainValidation.normalize(companyName);
+        String stripTradeName = SupplierDomainValidation.normalize(tradeName);
         String capitalized = StringUtils.capitalize(stripTradeName);
         this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
     }
@@ -207,32 +207,32 @@ public class SupplierEntity {
 
     private void setPhone(String phone) {
         String stripPhone = SupplierDomainValidation.normalize(phone);
-        String filterPhoneCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripPhone);
+        String filterPhoneCharacters = SupplierDomainValidation.filterOnlyDigits(stripPhone);
         this.phone = SupplierDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
     private void setZip(String zip) {
         String stripZip = SupplierDomainValidation.normalize(zip);
-        String filterZipCharacters = SupplierDomainValidation.filterZipCharacters(stripZip);
+        String filterZipCharacters = SupplierDomainValidation.filterOnlyDigits(stripZip);
         this.zip = SupplierDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
     }
 
     private void setStreet(String street) {
-        String stripStreet = SupplierDomainValidation.normalize(companyName);
+        String stripStreet = SupplierDomainValidation.normalize(street);
         String capitalized = StringUtils.capitalize(stripStreet);
         this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
     }
 
     private void setNumber(String number) {
         String stripNumber = SupplierDomainValidation.normalize(number);
-        String filterNumberCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripNumber);
+        String filterNumberCharacters = SupplierDomainValidation.sanitizeText(stripNumber);
         String upperCase = SupplierDomainValidation.upperCase(filterNumberCharacters);
         this.number = SupplierDomainValidation.requireNonBlank(upperCase, "Number", MAX_NUMBER_LENGTH);
     }
 
     private void setComplement(String complement) {
         String stripComplement = SupplierDomainValidation.normalize(complement);
-        String filterComplementCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripComplement);
+        String filterComplementCharacters = SupplierDomainValidation.sanitizeText(stripComplement);
         String upperCase = SupplierDomainValidation.upperCase(filterComplementCharacters);
         this.complement = SupplierDomainValidation.requireNonBlankIfPresent(upperCase, "Complement", MAX_COMPLEMENT_LENGTH);
     }
