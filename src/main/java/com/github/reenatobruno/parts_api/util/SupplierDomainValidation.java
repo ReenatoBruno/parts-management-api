@@ -52,13 +52,13 @@ public class SupplierDomainValidation {
         return normalized;
     }
 
-    public static String filterZipCharacters(String value) {
+    public static String filterOnlyDigits(String value) {
         if (value == null) return null;
 
         return value.replaceAll("\\D", "");
     }
 
-    public static String filterOnlyNumberCharacters(String value) {
+    public static String sanitizeText(String value) {
         if (value == null) return null;
 
         return value
