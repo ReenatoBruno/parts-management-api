@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -196,7 +197,7 @@ public class SupplierEntity {
     private void setTradeName(String tradeName) {
         String stripTradeName = SupplierDomainValidation.normalize(tradeName);
         String capitalized = StringUtils.capitalize(stripTradeName);
-        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
+        this.tradeName = SupplierDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
     }
 
     private void setEmail(String email) {
@@ -220,7 +221,7 @@ public class SupplierEntity {
     private void setStreet(String street) {
         String stripStreet = SupplierDomainValidation.normalize(street);
         String capitalized = StringUtils.capitalize(stripStreet);
-        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
+        this.street = SupplierDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
     }
 
     private void setNumber(String number) {
@@ -273,5 +274,17 @@ public class SupplierEntity {
         setDistrict(district);
         setCity(city);
         setState(state);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SupplierEntity supplier)) return false;
+        return cnpj != null && cnpj.equals(supplier.getCnpj());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cnpj);
     }
 }
