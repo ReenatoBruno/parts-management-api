@@ -31,7 +31,7 @@ public class SupplierEntity {
     private static final int MAX_TRADE_NAME_LENGTH = 150;
     private static final int MAX_EMAIL_LENGTH = 150;
     private static final int MAX_PHONE_LENGTH = 15;
-    private static final int MAX_ZIP_LENGTH = 8;
+    private static final int MAX_ZIP_LENGTH = 9;
     private static final int MAX_STREET_LENGTH = 150;
     private static final int MAX_NUMBER_LENGTH = 10;
     private static final int MAX_COMPLEMENT_LENGTH = 50;
@@ -183,22 +183,76 @@ public class SupplierEntity {
 
     public String getUpdated_by() { return updated_by; }
 
+    private void setCnpj(String cnpj) {
+        String stripCnpj = SupplierDomainValidation.normalize(cnpj);
+        this.cnpj = SupplierDomainValidation.requireCnpj(stripCnpj, "CNPJ", MAX_CNPJ_LENGTH);
+    }
     private void setCompanyName(String companyName) {
-        String normalizedCompanyName = SupplierDomainValidation.normalize(companyName);
-        String capitalized = StringUtils.capitalize(normalizedCompanyName);
-        this.companyName = SupplierDomainValidation.require_non_blank(capitalized, "Company name", MAX_COMPANY_NAME_LENGTH);
+        String stripCompanyName = SupplierDomainValidation.normalize(companyName);
+        String capitalized = StringUtils.capitalize(stripCompanyName);
+        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Company name", MAX_COMPANY_NAME_LENGTH);
     }
 
     private void setTradeName(String tradeName) {
-        String normalizedTradeName = SupplierDomainValidation.normalize(companyName);
-        String capitalized = StringUtils.capitalize(normalizedTradeName);
-        this.companyName = SupplierDomainValidation.require_non_blank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
+        String stripTradeName = SupplierDomainValidation.normalize(companyName);
+        String capitalized = StringUtils.capitalize(stripTradeName);
+        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
+    }
+
+    private void setEmail(String email) {
+        String stripEmail = SupplierDomainValidation.normalize(email);
+        String lowerCase =  SupplierDomainValidation.lowerCase(stripEmail);
+        this.email = SupplierDomainValidation.requireEmail(lowerCase, "E-mail", MAX_EMAIL_LENGTH);
+    }
+
+    private void setPhone(String phone) {
+        String stripPhone = SupplierDomainValidation.normalize(phone);
+        String filterPhoneCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripPhone);
+        this.phone = SupplierDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+    }
+
+    private void setZip(String zip) {
+        String stripZip = SupplierDomainValidation.normalize(zip);
+        String filterZipCharacters = SupplierDomainValidation.filterZipCharacters(stripZip);
+        this.zip = SupplierDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
     }
 
     private void setStreet(String street) {
-        String normalizedStreet = SupplierDomainValidation.normalize(companyName);
-        String capitalized = StringUtils.capitalize(normalizedStreet);
-        this.companyName = SupplierDomainValidation.require_non_blank(capitalized, "Street", MAX_STREET_LENGTH);
+        String stripStreet = SupplierDomainValidation.normalize(companyName);
+        String capitalized = StringUtils.capitalize(stripStreet);
+        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
+    }
+
+    private void setNumber(String number) {
+        String stripNumber = SupplierDomainValidation.normalize(number);
+        String filterNumberCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripNumber);
+        String upperCase = SupplierDomainValidation.upperCase(filterNumberCharacters);
+        this.number = SupplierDomainValidation.requireNonBlank(upperCase, "Number", MAX_NUMBER_LENGTH);
+    }
+
+    private void setComplement(String complement) {
+        String stripComplement = SupplierDomainValidation.normalize(complement);
+        String filterComplementCharacters = SupplierDomainValidation.filterOnlyNumberCharacters(stripComplement);
+        String upperCase = SupplierDomainValidation.upperCase(filterComplementCharacters);
+        this.complement = SupplierDomainValidation.requireNonBlankIfPresent(upperCase, "Complement", MAX_COMPLEMENT_LENGTH);
+    }
+
+    private void setDistrict(String district) {
+        String stripDistrict = SupplierDomainValidation.normalize(district);
+        String capitalized = StringUtils.capitalize(stripDistrict);
+        this.district = SupplierDomainValidation.requireNonBlank(capitalized, "District", MAX_DISTRICT_LENGTH);
+    }
+
+    private void setCity(String city) {
+        String stripCity = SupplierDomainValidation.normalize(city);
+        String capitalized = StringUtils.capitalize(stripCity);
+        this.city = SupplierDomainValidation.requireNonBlank(capitalized, "City", MAX_CITY_LENGTH);
+    }
+
+    private void setState(String state) {
+        String stripState = SupplierDomainValidation.normalize(state);
+        String upperCase = SupplierDomainValidation.upperCase(stripState);
+        this.state = SupplierDomainValidation.requireNonBlank(upperCase, "State", MAX_STATE_LENGTH);
     }
 
     public void deactivate() {
@@ -220,6 +274,4 @@ public class SupplierEntity {
         setCity(city);
         setState(state);
     }
-
-
 }
