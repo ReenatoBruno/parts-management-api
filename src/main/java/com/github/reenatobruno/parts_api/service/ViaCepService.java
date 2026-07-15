@@ -4,11 +4,13 @@ import com.github.reenatobruno.parts_api.dto.ViaCepResponseDTO;
 import com.github.reenatobruno.parts_api.exception.ExternalServiceException;
 import com.github.reenatobruno.parts_api.exception.ZipNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.net.http.HttpClient;
 import java.time.Duration;
 
 @Slf4j
@@ -17,10 +19,18 @@ public class ViaCepService {
 
     private final RestClient restClient;
 
-    public ViaCepService() {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectionRequestTimeout(Duration.ofSeconds(5));
-        factory.setReadTimeout(Duration.ofSeconds(10));
+    public ViaCepService(
+            @Value("${client.viacep.url:https://viacep.com.br/ws}") String baseUrl,
+            @Value("${client.viacep.timeout.connect:5}") long connectTimeout,
+            @Value("${client.viacep.timeout.read:10}") long readTimeout
+    ) {
+
+        HttpClient javaHttpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(connectTimeout))
+                .build();
+
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(javaHttpClient);
+        factory.setReadTimeout(Duration.ofSeconds(readTimeout));
 
         this.restClient = RestClient.builder()
                 .baseUrl("https://viacep.com.br/ws")
