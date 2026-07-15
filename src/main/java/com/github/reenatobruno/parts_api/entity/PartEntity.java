@@ -137,20 +137,20 @@ public class PartEntity {
         public String getUpdatedBy() { return updatedBy; }
 
         private void setPartNumber(String partNumber) {
-                String normalizedPartNumber = PartDomainValidation.normalize(partNumber);
-                String upperCase = normalizedPartNumber != null ? normalizedPartNumber.toUpperCase() : null;
+                String stripPartNumber = PartDomainValidation.normalize(partNumber);
+                String upperCase = stripPartNumber != null ? stripPartNumber.toUpperCase() : null;
                 this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setPartName(String partName) {
-                String normalizedPartName = PartDomainValidation.normalize(partName);
-                String capitalized = StringUtils.capitalize(normalizedPartName);
+                String stripPartName = PartDomainValidation.normalize(partName);
+                String capitalized = StringUtils.capitalize(stripPartName);
                 this.partName = PartDomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                BigDecimal normalizedPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
-                this.price = PartDomainValidation.requirePositivePrice(normalizedPrice, "Price");
+                BigDecimal stripPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
+                this.price = PartDomainValidation.requirePositivePrice(stripPrice, "Price");
         }
 
         private void setQuantity(Integer quantity) {
@@ -164,9 +164,9 @@ public class PartEntity {
         }
 
         private void setDescription(String description) {
-                String normalizedDescription = PartDomainValidation.normalize(description);
-                String capitalizedFirst = normalizedDescription != null
-                        ? normalizedDescription.substring(0, 1).toUpperCase() + normalizedDescription.substring(1).toLowerCase()
+                String stripDescription = PartDomainValidation.normalize(description);
+                String capitalizedFirst = stripDescription != null
+                        ? stripDescription.substring(0, 1).toUpperCase() + stripDescription.substring(1).toLowerCase()
                         : null;
                 this.description = PartDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
         }
