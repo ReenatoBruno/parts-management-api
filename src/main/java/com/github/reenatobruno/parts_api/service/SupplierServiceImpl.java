@@ -44,9 +44,9 @@ public class SupplierServiceImpl implements SupplierService {
             throw new SupplierAlreadyExistsException(requestDTO.cnpj());
         }
 
-        ViaCepResponseDTO viaCepResponseDTO = viaCepService.findByZip(requestDTO.zip());
+        ViaCepResponseDTO address = fetchAddress(requestDTO.zip());
 
-        SupplierEntity supplier = mapper.toEntity(requestDTO, viaCepResponseDTO);
+        SupplierEntity supplier = mapper.toEntity(requestDTO, address);
 
         try {
             SupplierEntity saveSupplier = repository.save(supplier);
@@ -93,7 +93,7 @@ public class SupplierServiceImpl implements SupplierService {
 
         SupplierEntity existingSupplier = findBySupplierId(supplierId);
 
-        ViaCepResponseDTO address = viaCepService.findByZip(updateDTO.zip());
+        ViaCepResponseDTO address = fetchAddress(updateDTO.zip());
 
         mapper.updateEntity(existingSupplier, updateDTO, address);
 
@@ -127,5 +127,10 @@ public class SupplierServiceImpl implements SupplierService {
 
                     return new SupplierNotFoundException(supplierId);
                 });
+    }
+
+    private ViaCepResponseDTO fetchAddress(String zip) {
+        log.info("Fetching address for zip: {}", zip);
+        return viaCepService.findByZip(zip);
     }
 }
