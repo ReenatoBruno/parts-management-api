@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS tb_parts(
     part_description VARCHAR(255),
     part_created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     part_updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    part_created_by VARCHAR(255) NOt NULL,
-    part_updated_by VARCHAR(255) NOT NULL,
+    part_created_by VARCHAR(50) NOt NULL,
+    part_updated_by VARCHAR(50) NOT NULL,
 
     CONSTRAINT pk_part_id PRIMARY KEY (part_id),
     CONSTRAINT uq_part_number UNIQUE (part_number),
