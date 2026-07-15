@@ -97,13 +97,13 @@ public class PartServiceImpl implements PartService {
 
     @Override
     @Transactional
-    public PartResponseDTO update(UUID partId, PartUpdateDTO requestDTO) {
+    public PartResponseDTO update(UUID partId, PartUpdateDTO updateDTO) {
 
         log.info("Updating part with ID: {}", partId);
 
         PartEntity existingPartEntity = findByPartId(partId);
 
-        mapper.updateEntity(existingPartEntity, requestDTO);
+        mapper.updateEntity(existingPartEntity, updateDTO);
 
         PartEntity partUpdated = repository.save(existingPartEntity);
 
