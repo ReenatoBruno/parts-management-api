@@ -85,7 +85,7 @@ public class PartServiceImpl implements PartService {
     @Transactional(readOnly = true)
     public Page<PartResponseDTO> getAll(String partName, Pageable pageable) {
 
-        log.debug("Fetching all parts with filter part name {}", partName);
+        log.info("Fetching all parts with filter part name {}", partName);
 
         if (partName == null || partName.isBlank()) {
             return repository.findAll(pageable)
