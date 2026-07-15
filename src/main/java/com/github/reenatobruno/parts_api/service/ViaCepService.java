@@ -33,7 +33,7 @@ public class ViaCepService {
         factory.setReadTimeout(Duration.ofSeconds(readTimeout));
 
         this.restClient = RestClient.builder()
-                .baseUrl("https://viacep.com.br/ws")
+                .baseUrl(baseUrl)
                 .requestFactory(factory)
                 .build();
     }
