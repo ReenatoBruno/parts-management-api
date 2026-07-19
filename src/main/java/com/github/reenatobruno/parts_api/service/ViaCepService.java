@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import java.net.http.HttpClient;
@@ -38,32 +41,28 @@ public class ViaCepService {
                 .build();
     }
 
+    @Retryable(
+            retryFor = {ExternalServiceException.class, ResourceAccessException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000)
+    )
+
     public ViaCepResponseDTO findByZip(String zip) {
 
-        try {
-            ViaCepResponseDTO responseDTO = restClient.get()
-                    .uri("/{zip}/json", zip)
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                        throw new ZipNotFoundException(zip);
-                    })
-                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-                        throw new ExternalServiceException("ViaCep Api unavailable");
-                    })
-                    .body(ViaCepResponseDTO.class);
+        ViaCepResponseDTO responseDTO = restClient.get()
+                .uri("/{zip}/json", zip)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    throw new ZipNotFoundException(zip);
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                    throw new ExternalServiceException("ViaCep Api unavailable");
+                })
+                .body(ViaCepResponseDTO.class);
 
-            if (responseDTO == null || "true".equals(responseDTO.erro())) {
-                throw new ZipNotFoundException(zip);
-            }
-            return responseDTO;
-
-        } catch (ZipNotFoundException | ExternalServiceException e) {
-            throw e;
-        } catch (Exception e) {
-
-            log.error("Error fetching zip from ViaCep: {}", zip, e);
-
-            throw new ExternalServiceException("Error consulting zip: " + zip);
+        if (responseDTO == null || "true".equals(responseDTO.erro())) {
+            throw new ZipNotFoundException(zip);
         }
+        return responseDTO;
     }
 }
