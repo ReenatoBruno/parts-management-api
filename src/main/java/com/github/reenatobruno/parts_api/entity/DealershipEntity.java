@@ -1,5 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
+import com.github.reenatobruno.parts_api.util.DealershipDomainValidation;
+import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -7,6 +9,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -15,7 +18,7 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "dealer_entity",
+@Table(name = "tb_dealer",
 indexes = {
         @Index(name = "idx_dealer_cnpj", columnList = "dealer_cnpj"),
         @Index(name = "idx_dealer_name", columnList = "dealer_name"),
@@ -46,7 +49,7 @@ public class DealershipEntity {
     private String cnpj;
 
     @Column(name = "dealer_name", unique = true, nullable = false, length = MAX_DEALER_NAME_LENGTH)
-    private String DealerName;
+    private String dealerName;
 
     @Column(name = "trade_name", nullable = false, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
@@ -93,7 +96,7 @@ public class DealershipEntity {
     @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
-    @LastModifiedBy
+    @LastModifiedDate
     @Column(name = "updated_by", nullable = false)
     private String updatedBy;
 
@@ -122,7 +125,7 @@ public class DealershipEntity {
     }
 
     public String getDealerName() {
-        return DealerName;
+        return dealerName;
     }
 
     public String getTradeName() {
@@ -183,9 +186,81 @@ public class DealershipEntity {
         return updatedBy;
     }
 
+    private void setCnpj(String cnpj) {
+        String stripCnpj = DealershipDomainValidation.normalize(cnpj);
+        this.cnpj = DealershipDomainValidation.requireCnpj(stripCnpj, "CNPJ", MAX_CNPJ_LENGTH);
+    }
+    private void setDealerName(String dealerName) {
+        String stripDealerName = DealershipDomainValidation.normalize(dealerName);
+        String capitalized = StringUtils.capitalize(stripDealerName);
+        this.dealerName = DealershipDomainValidation.requireNonBlank(capitalized, "Dealer name", MAX_DEALER_NAME_LENGTH);
+    }
+
+    private void setTradeName(String tradeName) {
+        String stripTradeName = DealershipDomainValidation.normalize(tradeName);
+        String capitalized = StringUtils.capitalize(stripTradeName);
+        this.tradeName = DealershipDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
+    }
+
+    private void setEmail(String email) {
+        String stripEmail = DealershipDomainValidation.normalize(email);
+        String lowerCase =  DealershipDomainValidation.lowerCase(stripEmail);
+        this.email = DealershipDomainValidation.requireEmail(lowerCase, "E-mail", MAX_EMAIL_LENGTH);
+    }
+
+    private void setPhone(String phone) {
+        String stripPhone = DealershipDomainValidation.normalize(phone);
+        String filterPhoneCharacters = DealershipDomainValidation.filterOnlyDigits(stripPhone);
+        this.phone = DealershipDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+    }
+
+    private void setZipCode(String zipCode) {
+        String stripZip = DealershipDomainValidation.normalize(zipCode);
+        String filterZipCharacters = DealershipDomainValidation.filterOnlyDigits(stripZip);
+        this.zipCode = DealershipDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
+    }
+
+    private void setStreet(String street) {
+        String stripStreet = DealershipDomainValidation.normalize(street);
+        String capitalized = StringUtils.capitalize(stripStreet);
+        this.street = DealershipDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
+    }
+
+    private void setNumber(String number) {
+        String stripNumber = DealershipDomainValidation.normalize(number);
+        String filterNumberCharacters = DealershipDomainValidation.sanitizeText(stripNumber);
+        String upperCase = DealershipDomainValidation.upperCase(filterNumberCharacters);
+        this.number = DealershipDomainValidation.requireNonBlank(upperCase, "Number", MAX_NUMBER_LENGTH);
+    }
+
+    private void setComplement(String complement) {
+        String stripComplement = DealershipDomainValidation.normalize(complement);
+        String filterComplementCharacters = DealershipDomainValidation.sanitizeText(stripComplement);
+        String upperCase = DealershipDomainValidation.upperCase(filterComplementCharacters);
+        this.complement = DealershipDomainValidation.requireNonBlankIfPresent(upperCase, "Complement", MAX_COMPLEMENT_LENGTH);
+    }
+
+    private void setDistrict(String district) {
+        String stripDistrict = DealershipDomainValidation.normalize(district);
+        String capitalized = StringUtils.capitalize(stripDistrict);
+        this.district = DealershipDomainValidation.requireNonBlank(capitalized, "District", MAX_DISTRICT_LENGTH);
+    }
+
+    private void setCity(String city) {
+        String stripCity = DealershipDomainValidation.normalize(city);
+        String capitalized = StringUtils.capitalize(stripCity);
+        this.city = DealershipDomainValidation.requireNonBlank(capitalized, "City", MAX_CITY_LENGTH);
+    }
+
+    private void setState(String state) {
+        String stripState = DealershipDomainValidation.normalize(state);
+        String upperCase = DealershipDomainValidation.upperCase(stripState);
+        this.state = DealershipDomainValidation.requireNonBlank(upperCase, "State", MAX_STATE_LENGTH);
+    }
+
     public void deactivate() {this.active = false;}
 
-    public void updateFields(String cnpj, String dealerName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
+    public void updateFields(String dealerName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
 
         setDealerName(dealerName);
         setTradeName(tradeName);
@@ -203,14 +278,12 @@ public class DealershipEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SupplierEntity supplier)) return false;
-        return cnpj != null && cnpj.equals(supplier.getCnpj());
+        if (!(o instanceof DealershipEntity dealership)) return false;
+        return cnpj != null && cnpj.equals(dealership.getCnpj());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(cnpj);
     }
-
-
 }
