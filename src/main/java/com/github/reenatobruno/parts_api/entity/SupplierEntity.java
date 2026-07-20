@@ -260,7 +260,7 @@ public class SupplierEntity {
         this.active = false;
     }
 
-    public void updateFields(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city) {
+    public void updateFields(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
 
         setCompanyName(companyName);
         setTradeName(tradeName);
