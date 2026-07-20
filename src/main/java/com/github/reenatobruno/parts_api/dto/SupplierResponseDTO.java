@@ -15,7 +15,7 @@ public record SupplierResponseDTO(
         @Schema(description = "CNPJ of the supplier", example = "12345678000195")
         String cnpj,
 
-        @Schema(description = "Legal company name", example = "Bosch Do Brasil Ltda")
+        @Schema(description = "Legal company name", example = "Bosch do Brasil Ltda")
         String companyName,
 
         @Schema(description = "Trade name", example = "Bosch Brasil")
