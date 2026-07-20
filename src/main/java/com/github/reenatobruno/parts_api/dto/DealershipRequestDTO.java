@@ -52,8 +52,5 @@ public record DealershipRequestDTO(
         @Pattern(regexp = "^[\\p{L}\\p{N}\\s\\-/]+$", message = "{dealership.complement.pattern}")
         @Size(max = 50, message = "{dealership.complement.size}")
         String complement
-
-
-
 ) {
 }
