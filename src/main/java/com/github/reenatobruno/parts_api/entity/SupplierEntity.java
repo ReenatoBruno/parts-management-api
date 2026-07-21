@@ -260,19 +260,19 @@ public class SupplierEntity {
         this.active = false;
     }
 
-    public void updateFields(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
+    public void updateFields(String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
 
-        setCompanyName(companyName);
-        setTradeName(tradeName);
-        setEmail(email);
-        setPhone(phone);
-        setZip(zip);
-        setStreet(street);
-        setNumber(number);
-        setComplement(complement);
-        setDistrict(district);
-        setCity(city);
-        setState(state);
+        if (companyName != null) setCompanyName(companyName);
+        if (tradeName != null) setTradeName(tradeName);
+        if (email != null) setEmail(email);
+        if (phone != null) setPhone(phone);
+        if (zip != null) setZip(zip);
+        if (street != null) setStreet(street);
+        if (number != null) setNumber(number);
+        if (complement != null) setComplement(complement);
+        if (district != null) setDistrict(district);
+        if (city != null) setCity(city);
+        if (state != null) setState(state);
     }
 
     @Override
