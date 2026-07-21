@@ -262,17 +262,17 @@ public class DealershipEntity {
 
     public void updateFields(String dealerName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
 
-        setDealerName(dealerName);
-        setTradeName(tradeName);
-        setEmail(email);
-        setPhone(phone);
-        setZipCode(zipCode);
-        setStreet(street);
-        setNumber(number);
-        setComplement(complement);
-        setDistrict(district);
-        setCity(city);
-        setState(state);
+        if (dealerName != null) setDealerName(dealerName);
+        if (tradeName != null) setTradeName(tradeName);
+        if (email != null) setEmail(email);
+        if (phone != null) setPhone(phone);
+        if (zipCode != null) setZipCode(zipCode);
+        if (street != null) setStreet(street);
+        if (number != null) setNumber(number);
+        if (complement != null) setComplement(complement);
+        if (district != null) setDistrict(district);
+        if (city != null) setCity(city);
+        if (state != null) setState(state);
     }
 
     @Override
