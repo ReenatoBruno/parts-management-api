@@ -26,7 +26,10 @@ public record PartResponseDTO (
         Integer quantity,
 
         @Schema(description = "Name of the company or person supplying the part", example = "Steel Parts Inc")
-        String supplier,
+        UUID supplierId,
+
+        @Schema(description = "Supplier name", example = "Bosch Do Brasil")
+        String supplierName,
 
         @Schema(description = "A brief description of the product (optional)" , example = "Stainless steel bolt 1/4 inch")
         String description,
