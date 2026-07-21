@@ -56,12 +56,12 @@ public class SupplierMapper {
                 updateDTO.email(),
                 updateDTO.phone(),
                 updateDTO.zip(),
-                address.street(),
+                address != null ? address.street() : null,
                 updateDTO.number(),
                 updateDTO.complement(),
-                address.district(),
-                address.city(),
-                address.state()
+                address != null ? address.district() : null,
+                address != null ? address.city() : null,
+                address != null ? address.state() : null
         );
     }
 }
