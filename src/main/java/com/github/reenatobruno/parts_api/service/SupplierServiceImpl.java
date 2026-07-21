@@ -93,7 +93,11 @@ public class SupplierServiceImpl implements SupplierService {
 
         SupplierEntity existingSupplier = findBySupplierId(supplierId);
 
-        ViaCepResponseDTO address = fetchAddress(updateDTO.zip());
+        ViaCepResponseDTO address = null;
+
+        if (updateDTO.zip() != null) {
+            address = fetchAddress(updateDTO.zip());
+        }
 
         mapper.updateEntity(existingSupplier, updateDTO, address);
 
