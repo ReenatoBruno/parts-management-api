@@ -36,8 +36,7 @@ public record PartRequestDTO (
 
         @Schema(description = "Legal name of the manufacturing or distributing entity", example = "Steel Parts Inc.", maxLength = 100)
         @NotBlank(message = "{part.supplier.notBlank}")
-        @Size(min = 5, max = 100, message = "{part.supplier.size}")
-        String supplier,
+        UUID supplierId,
 
         @Schema(description = "Technical specifications and features of the product", example = "Stainless steel bolt 1/4 inch", maxLength = 255)
         @Size(max = 255, message = "{part.description.size}")
