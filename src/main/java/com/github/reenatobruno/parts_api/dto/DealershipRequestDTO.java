@@ -18,7 +18,7 @@ public record DealershipRequestDTO(
         @Schema(description = "Legal company name", example = "Autoprime Comercio De Veiculos Ltda")
         @NotBlank(message = "{dealership.companyName.notBlank}")
         @Size(max = 150, message = "{dealership.companyName.size}")
-        String companyName,
+        String dealerName,
 
         @Schema(description = "Trade name of the dealership", example = "Autoprime Honda")
         @NotBlank(message = "{dealership.tradeName.notBlank}")
