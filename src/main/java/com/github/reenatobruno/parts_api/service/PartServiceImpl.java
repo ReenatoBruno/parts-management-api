@@ -5,12 +5,15 @@ import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.CategoryEntity;
 import com.github.reenatobruno.parts_api.entity.PartEntity;
+import com.github.reenatobruno.parts_api.entity.SupplierEntity;
 import com.github.reenatobruno.parts_api.exception.CategoryNotFoundException;
 import com.github.reenatobruno.parts_api.exception.PartNotFoundException;
 import com.github.reenatobruno.parts_api.exception.PartNumberAlreadyExistsException;
+import com.github.reenatobruno.parts_api.exception.SupplierNotFoundException;
 import com.github.reenatobruno.parts_api.mapper.PartMapper;
 import com.github.reenatobruno.parts_api.repository.CategoryRepository;
 import com.github.reenatobruno.parts_api.repository.PartRepository;
+import com.github.reenatobruno.parts_api.repository.SupplierRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,13 +30,14 @@ public class PartServiceImpl implements PartService {
     private final PartRepository repository;
     private final PartMapper mapper;
     private final CategoryRepository categoryRepository;
+    private final SupplierRepository supplierRepository;
 
-    public PartServiceImpl(PartRepository repository, PartMapper mapper, CategoryRepository categoryRepository ) {
+    public PartServiceImpl(PartRepository repository, PartMapper mapper, CategoryRepository categoryRepository, SupplierRepository supplierRepository ) {
 
         this.repository = repository;
         this.mapper = mapper;
         this.categoryRepository = categoryRepository;
-
+        this.supplierRepository = supplierRepository;
     }
 
     @Override
@@ -55,7 +59,13 @@ public class PartServiceImpl implements PartService {
                     return new CategoryNotFoundException(requestDTO.categoryId());
                 });
 
-        PartEntity partEntity = mapper.toEntity(requestDTO, category);
+        SupplierEntity supplier = supplierRepository.findById(requestDTO.supplierId())
+                .orElseThrow(() -> {
+                    log.warn("Supplier not found with ID: {}", requestDTO.supplierId());
+                    return new SupplierNotFoundException(requestDTO.supplierId());
+                });
+
+        PartEntity partEntity = mapper.toEntity(requestDTO, category, supplier);
 
         try {
             PartEntity partSaved = repository.save(partEntity);
@@ -135,6 +145,5 @@ public class PartServiceImpl implements PartService {
 
                     return new PartNotFoundException(partId);
                 });
-
     }
 }
