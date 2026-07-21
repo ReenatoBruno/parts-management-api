@@ -1,9 +1,11 @@
 package com.github.reenatobruno.parts_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import java.time.Instant;
 
+@Builder
 public record DealershipAdminResponseDTO(
 
         @Schema(description = "Basic dealership information")
