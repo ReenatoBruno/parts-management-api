@@ -5,17 +5,18 @@ import com.github.reenatobruno.parts_api.dto.PartResponseDTO;
 import com.github.reenatobruno.parts_api.dto.PartUpdateDTO;
 import com.github.reenatobruno.parts_api.entity.CategoryEntity;
 import com.github.reenatobruno.parts_api.entity.PartEntity;
+import com.github.reenatobruno.parts_api.entity.SupplierEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PartMapper {
-    public PartEntity toEntity(PartRequestDTO dto, CategoryEntity category) {
+    public PartEntity toEntity(PartRequestDTO dto, CategoryEntity category, SupplierEntity supplier) {
         return new PartEntity(
                 dto.partNumber(),
                 dto.partName(),
                 dto.price(),
                 dto.quantity(),
-                dto.supplier(),
+                supplier,
                 dto.description(),
                 category
         );
@@ -28,7 +29,8 @@ public class PartMapper {
             .partName(partEntity.getPartName())
             .price(partEntity.getPrice())
             .quantity(partEntity.getQuantity())
-            .supplier(partEntity.getSupplier())
+            .supplierId(partEntity.getSupplier().getSupplierId())
+            .supplierName(partEntity.getSupplier().getCompanyName())
             .description(partEntity.getDescription())
             .categoryId(partEntity.getCategory().getCategoryId())
             .categoryName(partEntity.getCategory().getCategoryName())
@@ -44,7 +46,6 @@ public class PartMapper {
                 dto.partName(),
                 dto.price(),
                 dto.quantity(),
-                dto.supplier(),
                 dto.description()
         );
     }
