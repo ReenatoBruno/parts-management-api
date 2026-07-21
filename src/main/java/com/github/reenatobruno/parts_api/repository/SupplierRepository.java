@@ -9,6 +9,7 @@ import java.nio.channels.FileChannel;
 import java.util.UUID;
 
 public interface SupplierRepository extends JpaRepository<SupplierEntity, UUID> {
+
     boolean existsByCnpj(String cnpj);
 
     Page<SupplierEntity> findAllByCompanyNameContainingIgnoreCase(String companyName, Pageable pageable);
