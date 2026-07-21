@@ -22,11 +22,6 @@ public record PartUpdateDTO (
         @PositiveOrZero(message = "{part.quantity.positiveOrZero}")
         Integer quantity,
 
-        @Schema(description = "The name of the supplier", example = "Steel Parts Inc")
-        @NotBlank(message = "{part.supplier.notBlank}")
-        @Size(min = 5, max = 100, message = "{part.supplier.size}")
-        String supplier,
-
         @Schema(description = "A brief description of the product (optional)" , example = "Stainless steel bolt 1/4 inch")
         @Size(min = 5, max = 500, message = "{part.description.size}")
         String description
