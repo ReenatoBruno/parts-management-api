@@ -52,7 +52,7 @@ public class DealershipMapper {
                 .build();
     }
 
-    public void updateFields(DealershipEntity entity, DealershipUpdateDTO updateDTO, ViaCepResponseDTO address) {
+    public void updateEntity(DealershipEntity entity, DealershipUpdateDTO updateDTO, ViaCepResponseDTO address) {
         entity.updateFields(
                 updateDTO.dealerName(),
                 updateDTO.tradeName(),
