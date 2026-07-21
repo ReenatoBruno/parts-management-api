@@ -49,8 +49,9 @@ public class PartEntity {
         @Column(nullable = false)
         private Integer quantity;
 
-        @Column(nullable = false, length = MAX_SUPPLIER_LENGTH )
-        private String supplier;
+        @ManyToOne
+        @JoinColumn(name = "supplier_id", nullable = false)
+        private SupplierEntity supplier;
 
         @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
         private String description;
@@ -78,7 +79,7 @@ public class PartEntity {
         @Column(name = "part_updated_by", nullable = false)
         private String updatedBy;
 
-        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description, CategoryEntity category) {
+        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, SupplierEntity supplier, String description, CategoryEntity category) {
 
                 setPartNumber(partNumber);
                 setPartName(partName);
@@ -110,7 +111,7 @@ public class PartEntity {
                 return quantity;
         }
 
-        public String getSupplier() {
+        public SupplierEntity getSupplier() {
                 return supplier;
         }
 
@@ -157,10 +158,8 @@ public class PartEntity {
                 this.quantity = PartDomainValidation.requirePositiveQuantity(quantity, "Quantity");
         }
 
-        private void setSupplier(String supplier) {
-                String normalizedSupplier = PartDomainValidation.normalize(supplier);
-                String capitalized = StringUtils.capitalize(normalizedSupplier);
-                this.supplier = PartDomainValidation.requireNonBlank(capitalized, "Supplier", MAX_SUPPLIER_LENGTH);
+        private void setSupplier(SupplierEntity supplier) {
+                this.supplier = supplier;
         }
 
         private void setDescription(String description) {
@@ -179,12 +178,11 @@ public class PartEntity {
                 this.active = false;
         }
 
-        public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier, String description) {
+        public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier) {
 
                 setPartName(partName);
                 setPrice(price);
                 setQuantity(quantity);
-                setSupplier(supplier);
                 setDescription(description);
         }
 
