@@ -10,7 +10,7 @@ public record SupplierUpdateDTO(
 
         @Schema(description = "Legal company name", example = "Bosch Do Brasil Ltda")
         @Size(max = 150, message = "{supplier.companyName.size}")
-        String companyName,
+        String supplierName,
 
         @Schema(description = "Trade name of the supplier", example = "Bosch Brasil")
         @Size(max = 150, message = "{supplier.tradeName.size}")
@@ -28,7 +28,7 @@ public record SupplierUpdateDTO(
         @Schema(description = "Zip code", example = "01310-100")
         @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "{supplier.zip.pattern}")
         @Size(max = 9, message = "{supplier.zip.size}")
-        String zip,
+        String zipCode,
 
         @Schema(description = "Street number", example = "1000A")
         @Pattern(regexp = "^[\\p{L}\\p{N}\\s\\-/]+$", message = "{supplier.number.pattern}")
