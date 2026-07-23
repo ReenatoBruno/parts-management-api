@@ -1,7 +1,7 @@
 package com.github.reenatobruno.parts_api.service;
 
 import com.github.reenatobruno.parts_api.dto.ViaCepResponseDTO;
-import com.github.reenatobruno.parts_api.exception.ExternalServiceException;
+import com.github.reenatobruno.parts_api.exception.ViaCepExternalServiceException;
 import com.github.reenatobruno.parts_api.exception.ZipNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +42,7 @@ public class ViaCepService {
     }
 
     @Retryable(
-            retryFor = {ExternalServiceException.class, ResourceAccessException.class},
+            retryFor = {ViaCepExternalServiceException.class, ResourceAccessException.class},
             maxAttempts = 3,
             backoff = @Backoff(delay = 1000)
     )
@@ -56,7 +56,7 @@ public class ViaCepService {
                     throw new ZipNotFoundException(zip);
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-                    throw new ExternalServiceException("ViaCep Api unavailable");
+                    throw new ViaCepExternalServiceException("ViaCep Api unavailable");
                 })
                 .body(ViaCepResponseDTO.class);
 
