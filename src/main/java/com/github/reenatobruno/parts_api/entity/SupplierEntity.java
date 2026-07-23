@@ -28,7 +28,7 @@ indexes = {
 public class SupplierEntity {
 
     private static final int MAX_CNPJ_LENGTH = 14;
-    private static final int MAX_COMPANY_NAME_LENGTH = 150;
+    private static final int MAX_SUPPLIER_NAME_LENGTH = 150;
     private static final int MAX_TRADE_NAME_LENGTH = 150;
     private static final int MAX_EMAIL_LENGTH = 150;
     private static final int MAX_PHONE_LENGTH = 15;
@@ -49,8 +49,8 @@ public class SupplierEntity {
     @Column(name = "supplier_cnpj", nullable = false, unique = true, length = MAX_CNPJ_LENGTH)
     private String cnpj;
 
-    @Column(name = "supplier_name", nullable = false, length = MAX_COMPANY_NAME_LENGTH)
-    private String companyName;
+    @Column(name = "supplier_name", nullable = false, length = MAX_SUPPLIER_NAME_LENGTH)
+    private String supplierName;
 
     @Column(name = "trade_name", nullable = false, unique = true, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
@@ -62,7 +62,7 @@ public class SupplierEntity {
     private String phone;
 
     @Column(nullable = false, length = MAX_ZIP_LENGTH)
-    private String zip;
+    private String zipCode;
 
     @Column(nullable = false, length = MAX_STREET_LENGTH)
     private String street;
@@ -101,14 +101,14 @@ public class SupplierEntity {
     @Column(name = "supplier_updated_by", nullable = false)
     private String updatedBy;
 
-    public SupplierEntity(String cnpj, String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
+    public SupplierEntity(String cnpj, String supplierName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
 
         setCnpj(cnpj);
-        setCompanyName(companyName);
+        setSupplierName(supplierName);
         setTradeName(tradeName);
         setEmail(email);
         setPhone(phone);
-        setZip(zip);
+        setZipCode(zipCode);
         setStreet(street);
         setNumber(number);
         setComplement(complement);
@@ -126,8 +126,8 @@ public class SupplierEntity {
         return cnpj;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getSupplierName() {
+        return supplierName;
     }
 
     public String getTradeName() {
@@ -140,8 +140,8 @@ public class SupplierEntity {
         return phone;
     }
 
-    public String getZip() {
-        return zip;
+    public String getZipCode() {
+        return zipCode;
     }
 
     public String getStreet() {
@@ -188,10 +188,10 @@ public class SupplierEntity {
         String stripCnpj = SupplierDomainValidation.normalize(cnpj);
         this.cnpj = SupplierDomainValidation.requireCnpj(stripCnpj, "CNPJ", MAX_CNPJ_LENGTH);
     }
-    private void setCompanyName(String companyName) {
-        String stripCompanyName = SupplierDomainValidation.normalize(companyName);
+    private void setSupplierName(String supplierName) {
+        String stripCompanyName = SupplierDomainValidation.normalize(supplierName);
         String capitalized = StringUtils.capitalize(stripCompanyName);
-        this.companyName = SupplierDomainValidation.requireNonBlank(capitalized, "Company name", MAX_COMPANY_NAME_LENGTH);
+        this.supplierName = SupplierDomainValidation.requireNonBlank(capitalized, "Company name", MAX_SUPPLIER_NAME_LENGTH);
     }
 
     private void setTradeName(String tradeName) {
@@ -212,10 +212,10 @@ public class SupplierEntity {
         this.phone = SupplierDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
-    private void setZip(String zip) {
-        String stripZip = SupplierDomainValidation.normalize(zip);
+    private void setZipCode(String zipCode) {
+        String stripZip = SupplierDomainValidation.normalize(zipCode);
         String filterZipCharacters = SupplierDomainValidation.filterOnlyDigits(stripZip);
-        this.zip = SupplierDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
+        this.zipCode = SupplierDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
     }
 
     private void setStreet(String street) {
@@ -260,13 +260,13 @@ public class SupplierEntity {
         this.active = false;
     }
 
-    public void updateFields(String companyName, String tradeName, String email, String phone, String zip, String street, String number, String complement, String district, String city, String state) {
+    public void updateFields(String supplierName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
 
-        if (companyName != null) setCompanyName(companyName);
+        if (supplierName != null) setSupplierName(supplierName);
         if (tradeName != null) setTradeName(tradeName);
         if (email != null) setEmail(email);
         if (phone != null) setPhone(phone);
-        if (zip != null) setZip(zip);
+        if (zipCode != null) setZipCode(zipCode);
         if (street != null) setStreet(street);
         if (number != null) setNumber(number);
         if (complement != null) setComplement(complement);
