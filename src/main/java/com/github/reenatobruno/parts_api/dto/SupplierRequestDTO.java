@@ -18,7 +18,7 @@ public record SupplierRequestDTO(
         @Schema(description = "Legal company name", example = "Bosch Do Brasil Ltda")
         @NotBlank(message = "{supplier.companyName.notBlank}")
         @Size(max = 150, message = "{supplier.companyName.size}")
-        String companyName,
+        String supplierName,
 
         @Schema(description = "Trade name of the supplier", example = "Bosch Brasil")
         @NotBlank(message = "{supplier.tradeName.notBlank}")
@@ -40,7 +40,7 @@ public record SupplierRequestDTO(
         @NotBlank(message = "{supplier.zip.notBlank}")
         @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "{supplier.zip.pattern}")
         @Size(max = 9, message = "{supplier.zip.size}")
-        String zip,
+        String zipCode,
 
         @Schema(description = "Street number", example = "1000A")
         @NotBlank(message = "{supplier.number.notBlank}")
