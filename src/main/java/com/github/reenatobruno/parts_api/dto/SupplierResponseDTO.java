@@ -16,7 +16,7 @@ public record SupplierResponseDTO(
         String cnpj,
 
         @Schema(description = "Legal company name", example = "Bosch do Brasil Ltda")
-        String companyName,
+        String supplierName,
 
         @Schema(description = "Trade name", example = "Bosch Brasil")
         String tradeName,
@@ -28,7 +28,7 @@ public record SupplierResponseDTO(
         String phone,
 
         @Schema(description = "Zip code", example = "01310-100")
-        String zip,
+        String zipCode,
 
         @Schema(description = "Street name", example = "Avenida Paulista")
         String street,
