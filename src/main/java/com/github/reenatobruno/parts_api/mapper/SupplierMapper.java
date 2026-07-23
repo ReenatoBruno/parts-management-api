@@ -13,11 +13,11 @@ public class SupplierMapper {
     public SupplierEntity toEntity(SupplierRequestDTO dto, ViaCepResponseDTO address) {
         return new SupplierEntity(
                 dto.cnpj(),
-                dto.companyName(),
+                dto.supplierName(),
                 dto.tradeName(),
                 dto.email(),
                 dto.phone(),
-                dto.zip(),
+                dto.zipCode(),
                 address.street(),
                 dto.number(),
                 dto.complement(),
@@ -31,11 +31,11 @@ public class SupplierMapper {
         return SupplierResponseDTO.builder()
                 .supplierId(entity.getSupplierId())
                 .cnpj(entity.getCnpj())
-                .companyName(entity.getCompanyName())
+                .supplierName(entity.getSupplierName())
                 .tradeName(entity.getTradeName())
                 .email(entity.getEmail())
                 .phone(entity.getPhone())
-                .zip(entity.getZip())
+                .zipCode(entity.getZipCode())
                 .street(entity.getStreet())
                 .number(entity.getNumber())
                 .complement(entity.getComplement())
@@ -51,11 +51,11 @@ public class SupplierMapper {
 
     public void updateEntity(SupplierEntity entity, SupplierUpdateDTO updateDTO, ViaCepResponseDTO address) {
         entity.updateFields(
-                updateDTO.companyName(),
+                updateDTO.supplierName(),
                 updateDTO.tradeName(),
                 updateDTO.email(),
                 updateDTO.phone(),
-                updateDTO.zip(),
+                updateDTO.zipCode(),
                 address != null ? address.street() : null,
                 updateDTO.number(),
                 updateDTO.complement(),
