@@ -16,6 +16,10 @@ public record UserUpdateDTO(
         @NotBlank
         @Email
         @Size(max = 150)
-        String userEmail
+        String userEmail,
+
+        @Schema(description = "Updated contact phone", example = "11999999999")
+        @Size(max = 15, message = "{dealership.phone.size}")
+        String userPhone
 ) {
 }
