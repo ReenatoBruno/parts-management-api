@@ -106,7 +106,11 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = findByUserId(userId);
 
-        user.disable();
+        if (!user.isAccountEnabled()) {
+            throw new UserAlreadyDeactivatedException();
+        }
+
+        user.deactivate();
 
         repository.save(user);
     }
