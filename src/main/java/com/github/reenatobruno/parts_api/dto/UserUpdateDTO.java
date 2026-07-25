@@ -3,6 +3,7 @@ package com.github.reenatobruno.parts_api.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record UserUpdateDTO(
@@ -19,7 +20,9 @@ public record UserUpdateDTO(
         String userEmail,
 
         @Schema(description = "Updated contact phone", example = "11999999999")
-        @Size(max = 15, message = "{dealership.phone.size}")
+        @NotBlank(message = "{user.phone.notBlank}")
+        @Pattern(regexp = "^[\\d\\s\\-\\(\\)]+$", message = "{user.phone.pattern}")
+        @Size(min = 10, max = 15, message = "{user.phone.size}")
         String userPhone
 ) {
 }
