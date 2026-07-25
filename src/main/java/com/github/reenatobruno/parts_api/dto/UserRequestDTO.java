@@ -26,6 +26,11 @@ public record UserRequestDTO(
         @Size(max = 150)
         String userEmail,
 
+        @Schema(description = "Contact phone number", example = "11999999999")
+        @NotBlank(message = "{dealership.phone.notBlank}")
+        @Size(max = 15, message = "{dealership.phone.size}")
+        String userPhone,
+
         @Schema(description = "Password, must contain uppercase, lowercase, digit, special character, between 8 and 60 characters long", example = "Senha123!")
         @NotBlank
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).+$", message = "Password must contain uppercase, lowercase, digit and special character")
