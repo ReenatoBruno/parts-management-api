@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ViaCepExternalServiceException.class)
     public ResponseEntity<ProblemDetail> handleExternalServiceException(ViaCepExternalServiceException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_GATEWAY, ex.getMessage());
-        problem.setTitle("External service unavailable");
+        problem.setTitle("Via Cep External service unavailable");
         problem.setProperty("timestamp", Instant.now());
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(problem);
     }
