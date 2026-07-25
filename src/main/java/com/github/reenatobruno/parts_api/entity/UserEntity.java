@@ -1,6 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.enums.UserRole;
+import com.github.reenatobruno.parts_api.util.DealershipDomainValidation;
 import com.github.reenatobruno.parts_api.util.UserDomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -30,6 +31,7 @@ public class UserEntity {
     private static final int MAX_NAME_LENGTH = 60;
     private static final int MAX_CPF_LENGTH = 11;
     private static final int MAX_EMAIL_LENGTH = 150;
+    private static final int MAX_PHONE_LENGTH = 15;
     private static final int MAX_PASSWORD_LENGTH = 255;
 
     @Id
@@ -45,6 +47,9 @@ public class UserEntity {
 
     @Column(name = "user_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
     private String userEmail;
+
+    @Column(name = "user_phone", nullable = false, length = MAX_PHONE_LENGTH)
+    private String userPhone;
 
     @Column(name = "user_password", nullable = false, length = MAX_PASSWORD_LENGTH)
     private String userPassword;
@@ -81,11 +86,12 @@ public class UserEntity {
     @Column(name = "user_updated_by", nullable = false)
     private String updatedBy;
 
-    public UserEntity(String userName, String userCpf, String userEmail, String userPassword) {
+    public UserEntity(String userName, String userCpf, String userEmail, String userPhone, String userPassword) {
 
         setUserName(userName);
         setUserCpf(userCpf);
         setUserEmail(userEmail);
+        setUserPhone(userPhone);
         setPassword(userPassword);
         this.userRole = UserRole.USER;
         this.accountNonBlocked = true;
@@ -94,22 +100,27 @@ public class UserEntity {
         this.accountEnabled = true;
     }
 
+
     public UUID getUserId() {return userId; }
 
     public String getUserName() {
         return userName;
     }
 
+    public String getUserCpf() {
+        return userCpf;
+    }
+
     public String getUserEmail() {
         return userEmail;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public String getUserCpf() {
-        return userCpf;
+    public String getUserPassword() {
+        return userPassword;
     }
 
     public UserRole getUserRole() {
@@ -164,6 +175,12 @@ public class UserEntity {
         this.userEmail = UserDomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
     }
 
+    private void setUserPhone(String userPhone) {
+        String stripPhone = UserDomainValidation.normalize(userPhone);
+        String filterPhoneCharacters = UserDomainValidation.filterOnlyDigits(stripPhone);
+        this.userPhone = UserDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+    }
+
     private void setPassword(String userPassword) {
         this.userPassword = UserDomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
     }
@@ -172,9 +189,10 @@ public class UserEntity {
         this.accountEnabled = false;
     }
 
-    public void updateFields(String userName, String userEmail) {
+    public void updateFields(String userName, String userEmail, String userPhone) {
        if (userName != null) setUserName(userName);
        if (userEmail != null) setUserEmail(userEmail);
+       if (userPhone != null) setUserPhone(userPhone);
     }
 
     public void changePassword(String newEncodedPassword) {
