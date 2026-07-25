@@ -1,7 +1,6 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.enums.UserRole;
-import com.github.reenatobruno.parts_api.util.DealershipDomainValidation;
 import com.github.reenatobruno.parts_api.util.UserDomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
