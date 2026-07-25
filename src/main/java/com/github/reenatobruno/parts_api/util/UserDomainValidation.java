@@ -46,4 +46,10 @@ public class UserDomainValidation {
         }
         return normalized;
     }
+
+    public static String filterOnlyDigits(String value) {
+        if (value == null) return null;
+
+        return value.replaceAll("\\D", "");
+    }
 }
