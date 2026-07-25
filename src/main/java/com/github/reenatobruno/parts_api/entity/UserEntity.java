@@ -149,18 +149,18 @@ public class UserEntity {
     }
 
     private void setUserName(String userName) {
-        String normalizedUserName = UserDomainValidation.normalize(userName);
-        this.userName = UserDomainValidation.requireNonBlank(normalizedUserName, "User name", MAX_NAME_LENGTH);
+        String stripUserName = UserDomainValidation.normalize(userName);
+        this.userName = UserDomainValidation.requireNonBlank(stripUserName, "User name", MAX_NAME_LENGTH);
     }
 
     private void setUserCpf(String userCpf) {
-        String normalizedCpf = UserDomainValidation.normalize(userCpf);
-        this.userCpf = UserDomainValidation.requireCpf(normalizedCpf, "CPF", MAX_CPF_LENGTH);
+        String stripCpf = UserDomainValidation.normalize(userCpf);
+        this.userCpf = UserDomainValidation.requireCpf(stripCpf, "CPF", MAX_CPF_LENGTH);
     }
 
     private void setUserEmail(String userEmail) {
-        String normalizedEmail = UserDomainValidation.normalize(userEmail);
-        String lowerCaseEmail = normalizedEmail != null ? normalizedEmail.toLowerCase() : null;
+        String stripEmail = UserDomainValidation.normalize(userEmail);
+        String lowerCaseEmail = stripEmail != null ? stripEmail.toLowerCase() : null;
         this.userEmail = UserDomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
     }
 
@@ -168,13 +168,13 @@ public class UserEntity {
         this.userPassword = UserDomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
     }
 
-    public void disable() {
+    public void deactivate() {
         this.accountEnabled = false;
     }
 
     public void updateFields(String userName, String userEmail) {
-        setUserName(userName);
-        setUserEmail(userEmail);
+       if (userName != null) setUserName(userName);
+       if (userEmail != null) setUserEmail(userEmail);
     }
 
     public void changePassword(String newEncodedPassword) {
