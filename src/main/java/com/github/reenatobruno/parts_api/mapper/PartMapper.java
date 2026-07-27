@@ -30,7 +30,7 @@ public class PartMapper {
             .price(partEntity.getPrice())
             .quantity(partEntity.getQuantity())
             .supplierId(partEntity.getSupplier().getSupplierId())
-            .supplierName(partEntity.getSupplier().getCompanyName())
+            .supplierName(partEntity.getSupplier().getSupplierName())
             .description(partEntity.getDescription())
             .categoryId(partEntity.getCategory().getCategoryId())
             .categoryName(partEntity.getCategory().getCategoryName())
