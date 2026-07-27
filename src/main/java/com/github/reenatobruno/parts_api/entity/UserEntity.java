@@ -30,7 +30,7 @@ public class UserEntity {
     private static final int MAX_NAME_LENGTH = 60;
     private static final int MAX_CPF_LENGTH = 11;
     private static final int MAX_EMAIL_LENGTH = 150;
-    private static final int MAX_PHONE_LENGTH = 15;
+    private static final int MAX_PHONE_LENGTH = 11;
     private static final int MAX_PASSWORD_LENGTH = 255;
 
     @Id
@@ -41,7 +41,7 @@ public class UserEntity {
     @Column(name = "user_name", nullable = false, length = MAX_NAME_LENGTH)
     private String userName;
 
-    @Column(name = "user_cpf", nullable = false, unique = true, length = MAX_CPF_LENGTH)
+    @Column(name = "user_cpf", nullable = false, unique = true, length = 60)
     private String userCpf;
 
     @Column(name = "user_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
@@ -98,7 +98,6 @@ public class UserEntity {
         this.credentialsNonExpired = true;
         this.accountEnabled = true;
     }
-
 
     public UUID getUserId() {return userId; }
 
@@ -177,7 +176,7 @@ public class UserEntity {
     private void setUserPhone(String userPhone) {
         String stripPhone = UserDomainValidation.normalize(userPhone);
         String filterPhoneCharacters = UserDomainValidation.filterOnlyDigits(stripPhone);
-        this.userPhone = UserDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+        this.userPhone = UserDomainValidation.requireValidPhone(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
     private void setPassword(String userPassword) {
@@ -185,7 +184,13 @@ public class UserEntity {
     }
 
     public void deactivate() {
+
         this.accountEnabled = false;
+
+        String deletedSuffix = "_DELETED_" + UUID.randomUUID().toString();
+
+        this.userEmail = this.userEmail + deletedSuffix;
+        this.userCpf = this.userCpf + deletedSuffix;
     }
 
     public void updateFields(String userName, String userEmail, String userPhone) {
