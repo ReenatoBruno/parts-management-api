@@ -52,4 +52,17 @@ public class UserDomainValidation {
 
         return value.replaceAll("\\D", "");
     }
+
+    public static String requireValidPhone(String value, String fieldName, int maxLength) {
+
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " não pode estar em branco.");
+        }
+
+        if (value.length() < 10 || value.length() > 11) {
+            throw new IllegalArgumentException(fieldName + " deve conter 10 (Fixo) ou 11 (Celular) dígitos numéricos com DDD.");
+        }
+
+        return value;
+    }
 }
