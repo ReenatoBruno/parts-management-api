@@ -76,6 +76,13 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = findByUserId(userId);
 
+        if (updateDTO.userEmail() != null && !updateDTO.userEmail().equals(user.getUserEmail())) {
+
+            if (repository.existsByUserEmail(updateDTO.userEmail())) {
+                throw new UserEmailAlreadyExistsException(updateDTO.userEmail());
+            }
+        }
+
         mapper.updateEntity(user, updateDTO);
 
         UserEntity saveUser = repository.save(user);
