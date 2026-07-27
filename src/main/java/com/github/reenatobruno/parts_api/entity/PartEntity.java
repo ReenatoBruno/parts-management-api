@@ -24,7 +24,7 @@ indexes = {
         @Index(name = "idx_part_number", columnList = "part_number")
 })
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@SQLRestriction("active = true")
+@SQLRestriction("part_active = true")
 public class PartEntity {
 
         private static final int MAX_PART_NUMBER_LENGTH = 50;
@@ -49,7 +49,7 @@ public class PartEntity {
         @Column(nullable = false)
         private Integer quantity;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "supplier_id", nullable = false)
         private SupplierEntity supplier;
 
@@ -59,7 +59,7 @@ public class PartEntity {
         @Column(name = "part_active", nullable = false)
         private boolean active;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "category_id", nullable = false)
         private CategoryEntity category;
 
