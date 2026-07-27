@@ -41,7 +41,7 @@ public class UserDomainValidation {
 
         String normalized = requireNonBlank(value, field, maxLength);
 
-        if (EMAIL_PATTERN.matcher(normalized).matches()) {
+        if (!EMAIL_PATTERN.matcher(normalized).matches()) {
             throw new IllegalArgumentException(field + " must be a valid email");
         }
         return normalized;
@@ -59,7 +59,7 @@ public class UserDomainValidation {
             throw new IllegalArgumentException(fieldName + " não pode estar em branco.");
         }
 
-        if (value.length() < 10 || value.length() > 11) {
+        if (value.length() < 10 || value.length() > maxLength) {
             throw new IllegalArgumentException(fieldName + " deve conter 10 (Fixo) ou 11 (Celular) dígitos numéricos com DDD.");
         }
 
