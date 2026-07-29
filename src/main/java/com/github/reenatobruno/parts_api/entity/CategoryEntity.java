@@ -25,7 +25,7 @@ indexes = {
 @SQLRestriction("active = true")
 public class CategoryEntity {
 
-    private static final int MAX_NAME_LENGTH = 60;
+    private static final int MAX_NAME_LENGTH = 50;
     private static final int MAX_DESCRIPTION_LENGTH = 255;
 
     @Id
