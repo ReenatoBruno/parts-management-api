@@ -22,12 +22,10 @@ CREATE TABLE IF NOT EXISTS tb_dealership(
     CONSTRAINT pk_tb_dealership PRIMARY KEY (dealer_id),
 
     CONSTRAINT uq_tb_dealership_cnpj UNIQUE (dealer_cnpj),
-    CONSTRAINT uq_tb_dealership_trade_name UNIQUE (dealer_trade_name),
     CONSTRAINT uq_tb_dealership_name UNIQUE (dealer_name),
     CONSTRAINT uq_tb_dealership_email UNIQUE (dealer_email),
 
     CONSTRAINT chk_dealer_email_lower CHECK (dealer_email = LOWER(dealer_email))
 );
 
-CREATE INDEX idx_tb_dealership_name ON tb_dealership (dealer_name);
-CREATE INDEX idx_tb_dealership_email ON tb_dealership (dealer_email);
+CREATE INDEX idx_tb_dealership_city ON tb_dealership (city);
