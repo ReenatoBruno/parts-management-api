@@ -53,7 +53,7 @@ public class PartEntity {
         @JoinColumn(name = "supplier_id", nullable = false)
         private SupplierEntity supplier;
 
-        @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
+        @Column(name = "part_description", length = MAX_SUPPLIER_LENGTH)
         private String description;
 
         @Column(name = "part_active", nullable = false)
@@ -177,8 +177,7 @@ public class PartEntity {
                 this.active = false;
         }
 
-        public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier) {
-
+        public void updateFields(String partName, BigDecimal price, Integer quantity, String description) {
                 setPartName(partName);
                 setPrice(price);
                 setQuantity(quantity);
