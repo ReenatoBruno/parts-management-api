@@ -54,7 +54,7 @@ public class DomainValidation {
     public static Integer requirePositiveQuantity(Integer value, String fieldName) {
         Objects.requireNonNull(value, fieldName + " is required");
 
-        if (value <= 0) {
+        if (value < 0) {
             throw new IllegalArgumentException(fieldName + " must be zero or greater");
         }
         return value;
