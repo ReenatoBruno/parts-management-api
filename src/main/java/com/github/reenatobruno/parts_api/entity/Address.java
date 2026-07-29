@@ -25,7 +25,7 @@ public class Address {
     @Column(nullable = false, length = MAX_NUMBER_LENGTH)
     private String number;
 
-    @Column(name = "address_complement,", length = MAX_COMPLEMENT_LENGTH)
+    @Column(name = "address_complement", length = MAX_COMPLEMENT_LENGTH)
     private String complement;
 
     @Column(nullable = false, length = MAX_DISTRICT_LENGTH)
