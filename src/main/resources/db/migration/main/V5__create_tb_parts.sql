@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tb_parts(
     supplier_id UUID NOT NULL,
     part_created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     part_updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    part_created_by VARCHAR(255) NOt NULL,
+    part_created_by VARCHAR(255) NOT NULL,
     part_updated_by VARCHAR(255) NOT NULL,
 
     CONSTRAINT pk_part_id PRIMARY KEY (part_id),
@@ -25,4 +25,5 @@ CREATE TABLE IF NOT EXISTS tb_parts(
 
 );
 
-CREATE INDEX idx_part_number on tb_parts (part_number);
+CREATE INDEX idx_part_name on tb_parts (part_name);
+CREATE INDEX idx_tb_parts_supplier_id ON tb_parts (supplier_id);
