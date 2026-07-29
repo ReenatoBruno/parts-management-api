@@ -27,7 +27,7 @@ public record DealershipUpdateDTO(
         @Schema(description = "Updated zip code", example = "01310-100")
         @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "{dealership.zip.pattern}")
         @Size(max = 9, message = "{dealership.zip.size}")
-        String zip,
+        String zipCode,
 
         @Schema(description = "Updated street number", example = "1000A")
         @Pattern(regexp = "^[\\p{L}\\p{N}\\s\\-/]+$", message = "{dealership.number.pattern}")
