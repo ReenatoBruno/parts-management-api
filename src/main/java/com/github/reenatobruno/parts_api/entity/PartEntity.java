@@ -1,6 +1,6 @@
 package com.github.reenatobruno.parts_api.entity;
 
-import com.github.reenatobruno.parts_api.util.PartDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -80,7 +80,6 @@ public class PartEntity {
         private String updatedBy;
 
         public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, SupplierEntity supplier, String description, CategoryEntity category) {
-
                 setPartNumber(partNumber);
                 setPartName(partName);
                 setPrice(price);
@@ -138,24 +137,24 @@ public class PartEntity {
         public String getUpdatedBy() { return updatedBy; }
 
         private void setPartNumber(String partNumber) {
-                String stripPartNumber = PartDomainValidation.normalize(partNumber);
+                String stripPartNumber = DomainValidation.normalize(partNumber);
                 String upperCase = stripPartNumber != null ? stripPartNumber.toUpperCase() : null;
-                this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
+                this.partNumber = DomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setPartName(String partName) {
-                String stripPartName = PartDomainValidation.normalize(partName);
+                String stripPartName = DomainValidation.normalize(partName);
                 String capitalized = StringUtils.capitalize(stripPartName);
-                this.partName = PartDomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
+                this.partName = DomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
                 BigDecimal stripPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
-                this.price = PartDomainValidation.requirePositivePrice(stripPrice, "Price");
+                this.price = DomainValidation.requirePositivePrice(stripPrice, "Price");
         }
 
         private void setQuantity(Integer quantity) {
-                this.quantity = PartDomainValidation.requirePositiveQuantity(quantity, "Quantity");
+                this.quantity = DomainValidation.requirePositiveQuantity(quantity, "Quantity");
         }
 
         private void setSupplier(SupplierEntity supplier) {
@@ -163,11 +162,11 @@ public class PartEntity {
         }
 
         private void setDescription(String description) {
-                String stripDescription = PartDomainValidation.normalize(description);
+                String stripDescription = DomainValidation.normalize(description);
                 String capitalizedFirst = stripDescription != null
                         ? stripDescription.substring(0, 1).toUpperCase() + stripDescription.substring(1).toLowerCase()
                         : null;
-                this.description = PartDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
+                this.description = DomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         private void setCategory(CategoryEntity category) {
