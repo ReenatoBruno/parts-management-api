@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,8 +19,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_dealership",
 indexes = {
-        @Index(name = "idx_dealer_name", columnList = "dealer_name"),
-        @Index(name = "idx_dealer_email", columnList = "dealer_email"),
+        @Index(name = "idx_dealer_city", columnList = "city")
 
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,7 +43,7 @@ public class DealershipEntity {
     @Column(name = "dealer_name", nullable = false, unique = true, length = MAX_DEALER_NAME_LENGTH)
     private String dealerName;
 
-    @Column(name = "dealer_trade_name", nullable = false, unique = true, length = MAX_TRADE_NAME_LENGTH)
+    @Column(name = "dealer_trade_name", nullable = false, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
 
     @Column(name = "dealer_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
@@ -64,7 +62,7 @@ public class DealershipEntity {
     @Column(name = "dealer_created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @LastModifiedBy
+    @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
