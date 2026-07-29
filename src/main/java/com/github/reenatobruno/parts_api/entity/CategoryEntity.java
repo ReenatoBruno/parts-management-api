@@ -1,6 +1,6 @@
 package com.github.reenatobruno.parts_api.entity;
 
-import com.github.reenatobruno.parts_api.util.CategoryDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -94,17 +94,17 @@ public class CategoryEntity {
     }
 
     private void setCategoryName(String categoryName) {
-        String normalizedCategoryName = CategoryDomainValidation.normalize(categoryName);
+        String normalizedCategoryName = DomainValidation.normalize(categoryName);
         String capitalized = StringUtils.capitalize(normalizedCategoryName);
-        this.categoryName = CategoryDomainValidation.requireNonBlank(capitalized, "Category Name", MAX_NAME_LENGTH);
+        this.categoryName = DomainValidation.requireNonBlank(capitalized, "Category Name", MAX_NAME_LENGTH);
     }
 
     private void setCategoryDescription(String categoryDescription) {
-        String normalizeCategoryDescription = CategoryDomainValidation.normalize(categoryDescription);
+        String normalizeCategoryDescription = DomainValidation.normalize(categoryDescription);
         String capitalizedFirst = normalizeCategoryDescription != null
                 ? normalizeCategoryDescription.substring(0, 1).toUpperCase() + normalizeCategoryDescription.substring(1).toLowerCase()
                 : null;
-        this.categoryDescription = CategoryDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Category Description", MAX_DESCRIPTION_LENGTH);
+        this.categoryDescription = DomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Category Description", MAX_DESCRIPTION_LENGTH);
     }
 
     public void deactivate() {
