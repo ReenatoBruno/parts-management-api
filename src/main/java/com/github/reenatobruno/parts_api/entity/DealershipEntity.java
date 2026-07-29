@@ -18,14 +18,14 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_dealer",
+@Table(name = "tb_dealership",
 indexes = {
-        @Index(name = "idx_dealer_cnpj", columnList = "dealer_cnpj"),
         @Index(name = "idx_dealer_name", columnList = "dealer_name"),
+        @Index(name = "idx_dealer_email", columnList = "dealer_email"),
 
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("active = true")
+@SQLRestriction("dealer_active = true")
 public class DealershipEntity {
 
     private static final int MAX_CNPJ_LENGTH = 14;
@@ -36,21 +36,22 @@ public class DealershipEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "dealer_id")
     private UUID dealerId;
 
     @Column(name = "dealer_cnpj", nullable = false, unique = true, length = MAX_CNPJ_LENGTH)
     private String cnpj;
 
-    @Column(name = "dealer_name", unique = true, nullable = false, length = MAX_DEALER_NAME_LENGTH)
+    @Column(name = "dealer_name", nullable = false, unique = true, length = MAX_DEALER_NAME_LENGTH)
     private String dealerName;
 
-    @Column(name = "trade_name", nullable = false, length = MAX_TRADE_NAME_LENGTH)
+    @Column(name = "dealer_trade_name", nullable = false, unique = true, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
 
     @Column(name = "dealer_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
     private String email;
 
-    @Column(nullable = false, length = MAX_PHONE_LENGTH)
+    @Column(name = "dealer_phone", nullable = false, length = MAX_PHONE_LENGTH)
     private String phone;
 
     @Column(name = "dealer_active", nullable = false)
