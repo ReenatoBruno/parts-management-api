@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS tb_parts(
 
     CONSTRAINT chk_part_number_upper CHECK (part_number = UPPER(part_number)),
     CONSTRAINT chk_price_positive CHECK (price > 0),
-    CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
+    CONSTRAINT chk_quantity_positive CHECK (quantity >= 0),
 
     CONSTRAINT fk_parts_supplier FOREIGN KEY (supplier_id) REFERENCES tb_supplier (supplier_id)
 
