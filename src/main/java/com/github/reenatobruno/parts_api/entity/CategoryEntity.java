@@ -17,10 +17,7 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_category",
-indexes = {
-        @Index(name = "idx_category_name", columnList = "category_name")
-})
+@Table(name = "tb_category")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @SQLRestriction("active = true")
 public class CategoryEntity {
