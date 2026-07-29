@@ -1,6 +1,6 @@
 package com.github.reenatobruno.parts_api.entity;
 
-import com.github.reenatobruno.parts_api.util.PartDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -21,10 +21,10 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_parts",
 indexes = {
-        @Index(name = "idx_part_number", columnList = "part_number")
+        @Index(name = "idx_part_name", columnList = "part_name")
 })
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@SQLRestriction("active = true")
+@SQLRestriction("part_active = true")
 public class PartEntity {
 
         private static final int MAX_PART_NUMBER_LENGTH = 50;
@@ -49,16 +49,17 @@ public class PartEntity {
         @Column(nullable = false)
         private Integer quantity;
 
-        @Column(nullable = false, length = MAX_SUPPLIER_LENGTH )
-        private String supplier;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "supplier_id", nullable = false)
+        private SupplierEntity supplier;
 
-        @Column(name = "part_description", length = MAX_DESCRIPTION_LENGTH)
+        @Column(name = "part_description", length = MAX_SUPPLIER_LENGTH)
         private String description;
 
         @Column(name = "part_active", nullable = false)
         private boolean active;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "category_id", nullable = false)
         private CategoryEntity category;
 
@@ -78,8 +79,7 @@ public class PartEntity {
         @Column(name = "part_updated_by", nullable = false)
         private String updatedBy;
 
-        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, String supplier, String description, CategoryEntity category) {
-
+        public PartEntity(String partNumber, String partName, BigDecimal price, Integer quantity, SupplierEntity supplier, String description, CategoryEntity category) {
                 setPartNumber(partNumber);
                 setPartName(partName);
                 setPrice(price);
@@ -110,7 +110,7 @@ public class PartEntity {
                 return quantity;
         }
 
-        public String getSupplier() {
+        public SupplierEntity getSupplier() {
                 return supplier;
         }
 
@@ -137,38 +137,36 @@ public class PartEntity {
         public String getUpdatedBy() { return updatedBy; }
 
         private void setPartNumber(String partNumber) {
-                String normalizedPartNumber = PartDomainValidation.normalize(partNumber);
-                String upperCase = normalizedPartNumber != null ? normalizedPartNumber.toUpperCase() : null;
-                this.partNumber = PartDomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
+                String stripPartNumber = DomainValidation.normalize(partNumber);
+                String upperCase = stripPartNumber != null ? stripPartNumber.toUpperCase() : null;
+                this.partNumber = DomainValidation.requireValidPartNumber(upperCase, "Part number", MAX_PART_NUMBER_LENGTH);
         }
 
         private void setPartName(String partName) {
-                String normalizedPartName = PartDomainValidation.normalize(partName);
-                String capitalized = StringUtils.capitalize(normalizedPartName);
-                this.partName = PartDomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
+                String stripPartName = DomainValidation.normalize(partName);
+                String capitalized = StringUtils.capitalize(stripPartName);
+                this.partName = DomainValidation.requireNonBlank(capitalized, "Part name", MAX_NAME_LENGTH);
         }
 
         private void setPrice(BigDecimal price) {
-                BigDecimal normalizedPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
-                this.price = PartDomainValidation.requirePositivePrice(normalizedPrice, "Price");
+                BigDecimal stripPrice = price != null ? price.setScale(2, RoundingMode.HALF_UP) : null;
+                this.price = DomainValidation.requirePositivePrice(stripPrice, "Price");
         }
 
         private void setQuantity(Integer quantity) {
-                this.quantity = PartDomainValidation.requirePositiveQuantity(quantity, "Quantity");
+                this.quantity = DomainValidation.requirePositiveQuantity(quantity, "Quantity");
         }
 
-        private void setSupplier(String supplier) {
-                String normalizedSupplier = PartDomainValidation.normalize(supplier);
-                String capitalized = StringUtils.capitalize(normalizedSupplier);
-                this.supplier = PartDomainValidation.requireNonBlank(capitalized, "Supplier", MAX_SUPPLIER_LENGTH);
+        private void setSupplier(SupplierEntity supplier) {
+                this.supplier = supplier;
         }
 
         private void setDescription(String description) {
-                String normalizedDescription = PartDomainValidation.normalize(description);
-                String capitalizedFirst = normalizedDescription != null
-                        ? normalizedDescription.substring(0, 1).toUpperCase() + normalizedDescription.substring(1).toLowerCase()
+                String stripDescription = DomainValidation.normalize(description);
+                String capitalizedFirst = stripDescription != null
+                        ? stripDescription.substring(0, 1).toUpperCase() + stripDescription.substring(1).toLowerCase()
                         : null;
-                this.description = PartDomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
+                this.description = DomainValidation.requireNonBlankIfPresent(capitalizedFirst, "Description", MAX_DESCRIPTION_LENGTH);
         }
 
         private void setCategory(CategoryEntity category) {
@@ -179,12 +177,10 @@ public class PartEntity {
                 this.active = false;
         }
 
-        public void updateFields(String partName, BigDecimal price, Integer quantity, String supplier, String description) {
-
+        public void updateFields(String partName, BigDecimal price, Integer quantity, String description) {
                 setPartName(partName);
                 setPrice(price);
                 setQuantity(quantity);
-                setSupplier(supplier);
                 setDescription(description);
         }
 
@@ -199,5 +195,4 @@ public class PartEntity {
         public int hashCode() {
                 return Objects.hash(partNumber);
         }
-
 }

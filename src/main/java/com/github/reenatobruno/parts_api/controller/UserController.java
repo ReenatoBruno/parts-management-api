@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.userId")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserResponseDTO>> getAll(@RequestParam(required = false) String userName, @PageableDefault(size = 20, sort = "userName") Pageable pageable) {
         return ResponseEntity.ok(service.getAll(userName, pageable));
     }
