@@ -1,7 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.enums.UserRole;
-import com.github.reenatobruno.parts_api.util.UserDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -158,29 +158,29 @@ public class UserEntity {
     }
 
     private void setUserName(String userName) {
-        String stripUserName = UserDomainValidation.normalize(userName);
-        this.userName = UserDomainValidation.requireNonBlank(stripUserName, "User name", MAX_NAME_LENGTH);
+        String stripUserName = DomainValidation.normalize(userName);
+        this.userName = DomainValidation.requireNonBlank(stripUserName, "User name", MAX_NAME_LENGTH);
     }
 
     private void setUserCpf(String userCpf) {
-        String stripCpf = UserDomainValidation.normalize(userCpf);
-        this.userCpf = UserDomainValidation.requireCpf(stripCpf, "CPF", MAX_CPF_LENGTH);
+        String stripCpf = DomainValidation.normalize(userCpf);
+        this.userCpf = DomainValidation.requireCpf(stripCpf, "CPF", MAX_CPF_LENGTH);
     }
 
     private void setUserEmail(String userEmail) {
-        String stripEmail = UserDomainValidation.normalize(userEmail);
-        String lowerCaseEmail = stripEmail != null ? stripEmail.toLowerCase() : null;
-        this.userEmail = UserDomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
+        String stripEmail = DomainValidation.normalize(userEmail);
+        String lowerCaseEmail = DomainValidation.lowerCase(stripEmail);
+        this.userEmail = DomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
     }
 
     private void setUserPhone(String userPhone) {
-        String stripPhone = UserDomainValidation.normalize(userPhone);
-        String filterPhoneCharacters = UserDomainValidation.filterOnlyDigits(stripPhone);
-        this.userPhone = UserDomainValidation.requireValidPhone(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+        String stripPhone = DomainValidation.normalize(userPhone);
+        String filterPhoneCharacters = DomainValidation.filterZipAndPhoneCharacters(stripPhone);
+        this.userPhone = DomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
     private void setPassword(String userPassword) {
-        this.userPassword = UserDomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
+        this.userPassword = DomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
     }
 
     public void deactivate() {
