@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS tb_supplier (
 
     CONSTRAINT pk_supplier PRIMARY KEY (supplier_id),
     CONSTRAINT uk_supplier_cnpj UNIQUE (supplier_cnpj),
-    CONSTRAINT uk_supplier_name UNIQUE (supplier_name)
+    CONSTRAINT uk_supplier_name UNIQUE (supplier_name),
+    CONSTRAINT uk_supplier_email UNIQUE (supplier_email)
 );
 
 CREATE INDEX idx_supplier_cnpj ON tb_supplier (supplier_cnpj);
