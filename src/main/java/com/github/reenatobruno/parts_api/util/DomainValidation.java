@@ -12,7 +12,6 @@ public class DomainValidation {
     private static final Pattern CPF_PATTERN = Pattern.compile("^\\d{11}$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
-
     public static String normalize(String value) {
         return value != null ? value.strip() : null;
     }
