@@ -33,13 +33,6 @@ public class DealershipEntity {
     private static final int MAX_TRADE_NAME_LENGTH = 150;
     private static final int MAX_EMAIL_LENGTH = 150;
     private static final int MAX_PHONE_LENGTH = 15;
-    private static final int MAX_ZIP_LENGTH = 9;
-    private static final int MAX_STREET_LENGTH = 150;
-    private static final int MAX_NUMBER_LENGTH = 10;
-    private static final int MAX_COMPLEMENT_LENGTH = 50;
-    private static final int MAX_DISTRICT_LENGTH = 50;
-    private static final int MAX_CITY_LENGTH = 50;
-    private static final int MAX_STATE_LENGTH = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,29 +53,11 @@ public class DealershipEntity {
     @Column(nullable = false, length = MAX_PHONE_LENGTH)
     private String phone;
 
-    @Column(nullable = false, length = MAX_ZIP_LENGTH)
-    private String zipCode;
-
-    @Column(nullable = false, length = MAX_STREET_LENGTH)
-    private String street;
-
-    @Column(nullable = false, length = MAX_NUMBER_LENGTH)
-    private String number;
-
-    @Column(nullable = true, length = MAX_COMPLEMENT_LENGTH)
-    private String complement;
-
-    @Column(nullable = false, length = MAX_DISTRICT_LENGTH)
-    private String district;
-
-    @Column(nullable = false, length = MAX_CITY_LENGTH)
-    private String city;
-
-    @Column(nullable = false, length = MAX_STATE_LENGTH)
-    private String state;
-
     @Column(name = "dealer_active", nullable = false)
     private boolean active;
+
+    @Embedded
+    private Address address;
 
     @CreatedDate
     @Column(name = "dealer_created_at", nullable = false, updatable = false)
@@ -100,20 +75,14 @@ public class DealershipEntity {
     @Column(name = "updated_by", nullable = false)
     private String updatedBy;
 
-    public DealershipEntity(String cnpj, String dealerName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
+    public DealershipEntity(String cnpj, String dealerName, String tradeName, String email, String phone, Address address) {
         setCnpj(cnpj);
         setDealerName(dealerName);
         setTradeName(tradeName);
         setEmail(email);
         setPhone(phone);
-        setZipCode(zipCode);
-        setStreet(street);
-        setNumber(number);
-        setComplement(complement);
-        setDistrict(district);
-        setCity(city);
-        setState(state);
         this.active = true;
+        this.address = address;
     }
 
     public UUID getDealerId() {
@@ -140,35 +109,11 @@ public class DealershipEntity {
         return phone;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public String getDistrict() { return district; }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
     public boolean isActive() {
         return active;
     }
+
+    public Address getAddress() { return address; }
 
     public Instant getCreatedAt() {
         return createdAt;
@@ -214,65 +159,15 @@ public class DealershipEntity {
         this.phone = DealershipDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
-    private void setZipCode(String zipCode) {
-        String stripZip = DealershipDomainValidation.normalize(zipCode);
-        String filterZipCharacters = DealershipDomainValidation.filterOnlyDigits(stripZip);
-        this.zipCode = DealershipDomainValidation.requireNonBlank(filterZipCharacters, "Zip", MAX_ZIP_LENGTH);
-    }
-
-    private void setStreet(String street) {
-        String stripStreet = DealershipDomainValidation.normalize(street);
-        String capitalized = StringUtils.capitalize(stripStreet);
-        this.street = DealershipDomainValidation.requireNonBlank(capitalized, "Street", MAX_STREET_LENGTH);
-    }
-
-    private void setNumber(String number) {
-        String stripNumber = DealershipDomainValidation.normalize(number);
-        String filterNumberCharacters = DealershipDomainValidation.sanitizeText(stripNumber);
-        String upperCase = DealershipDomainValidation.upperCase(filterNumberCharacters);
-        this.number = DealershipDomainValidation.requireNonBlank(upperCase, "Number", MAX_NUMBER_LENGTH);
-    }
-
-    private void setComplement(String complement) {
-        String stripComplement = DealershipDomainValidation.normalize(complement);
-        String filterComplementCharacters = DealershipDomainValidation.sanitizeText(stripComplement);
-        String upperCase = DealershipDomainValidation.upperCase(filterComplementCharacters);
-        this.complement = DealershipDomainValidation.requireNonBlankIfPresent(upperCase, "Complement", MAX_COMPLEMENT_LENGTH);
-    }
-
-    private void setDistrict(String district) {
-        String stripDistrict = DealershipDomainValidation.normalize(district);
-        String capitalized = StringUtils.capitalize(stripDistrict);
-        this.district = DealershipDomainValidation.requireNonBlank(capitalized, "District", MAX_DISTRICT_LENGTH);
-    }
-
-    private void setCity(String city) {
-        String stripCity = DealershipDomainValidation.normalize(city);
-        String capitalized = StringUtils.capitalize(stripCity);
-        this.city = DealershipDomainValidation.requireNonBlank(capitalized, "City", MAX_CITY_LENGTH);
-    }
-
-    private void setState(String state) {
-        String stripState = DealershipDomainValidation.normalize(state);
-        String upperCase = DealershipDomainValidation.upperCase(stripState);
-        this.state = DealershipDomainValidation.requireNonBlank(upperCase, "State", MAX_STATE_LENGTH);
-    }
-
     public void deactivate() {this.active = false;}
 
-    public void updateFields(String dealerName, String tradeName, String email, String phone, String zipCode, String street, String number, String complement, String district, String city, String state) {
+    public void updateFields(String dealerName, String tradeName, String email, String phone, Address address) {
 
         if (dealerName != null) setDealerName(dealerName);
         if (tradeName != null) setTradeName(tradeName);
         if (email != null) setEmail(email);
         if (phone != null) setPhone(phone);
-        if (zipCode != null) setZipCode(zipCode);
-        if (street != null) setStreet(street);
-        if (number != null) setNumber(number);
-        if (complement != null) setComplement(complement);
-        if (district != null) setDistrict(district);
-        if (city != null) setCity(city);
-        if (state != null) setState(state);
+        if (address != null) this.address = address;
     }
 
     @Override
