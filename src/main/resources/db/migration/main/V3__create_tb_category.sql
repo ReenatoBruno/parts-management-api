@@ -12,5 +12,3 @@ CREATE TABLE IF NOT EXISTS tb_categoty(
     CONSTRAINT pk_category PRIMARY KEY (category_id),
     CONSTRAINT uq_category_name UNIQUE (category_name)
 );
-
-CREATE INDEX idx_category_name ON tb_category(category_name);
