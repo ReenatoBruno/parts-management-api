@@ -112,6 +112,8 @@ public class SupplierEntity {
         return active;
     }
 
+    public Address getAddress() { return address; }
+
     public Instant getCreatedAt() { return createdAt; }
 
     public Instant getUpdatedAt() {
@@ -156,19 +158,14 @@ public class SupplierEntity {
         this.active = false;
     }
 
-    public void updateFields(String supplierName, String tradeName, String email, String phone) {
+    public void updateFields(String supplierName, String tradeName, String email, String phone, Address address) {
 
         if (supplierName != null) setSupplierName(supplierName);
         if (tradeName != null) setTradeName(tradeName);
         if (email != null) setEmail(email);
         if (phone != null) setPhone(phone);
+        if (address != null) this.address = address;
     }
-
-    private void setAddress(Address address) {
-        if (address == null) throw new IllegalArgumentException("Address is required");
-        this.address = address;
-    }
-
 
     @Override
     public boolean equals(Object o) {
