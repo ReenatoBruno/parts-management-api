@@ -22,7 +22,6 @@ import java.util.UUID;
         indexes = {
                 @Index(name = "idx_order_dealership", columnList = "dealership_id"),
                 @Index(name = "idx_order_status", columnList = "order_status"),
-                @Index(name = "idx_order_number", columnList = "order_number")
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
