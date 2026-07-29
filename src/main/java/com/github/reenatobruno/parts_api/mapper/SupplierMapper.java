@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class SupplierMapper {
 
     public SupplierEntity toEntity(SupplierRequestDTO dto, ViaCepResponseDTO viaCep) {
-
         Address address = new Address(
                 dto.zipCode(),
                 viaCep.street(),
@@ -56,7 +55,6 @@ public class SupplierMapper {
     }
 
     public void updateEntity(SupplierEntity entity, SupplierUpdateDTO updateDTO, ViaCepResponseDTO viaCep) {
-
         Address address = null;
         if (viaCep != null) {
             address = new Address(
