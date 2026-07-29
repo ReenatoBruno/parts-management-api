@@ -47,7 +47,7 @@ public class SupplierEntity {
     @Column(name = "trade_name", nullable = false, unique = true, length = MAX_TRADE_NAME_LENGTH)
     private String tradeName;
 
-    @Column(name = "supplier_email", nullable = false, length = MAX_EMAIL_LENGTH)
+    @Column(name = "supplier_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
     private String email;
 
     @Column(name = "supplier_phone", nullable = false, length = MAX_PHONE_LENGTH)
