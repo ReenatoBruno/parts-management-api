@@ -2,14 +2,23 @@ package com.github.reenatobruno.parts_api.util;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
-public class PartDomainValidation {
+public class DomainValidation {
 
-    private PartDomainValidation () {}
+    private DomainValidation() {}
+
+    private static final Pattern CNPJ_PATTERN = Pattern.compile("^\\d{14}$");
+    private static final Pattern CPF_PATTERN = Pattern.compile("^\\d{11}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
     public static String normalize(String value) {
         return value != null ? value.strip() : null;
     }
+
+    public static String lowerCase(String value) { return value != null ? value.toLowerCase() : null; }
+
+    public static String upperCase(String value) { return value != null ? value.toUpperCase() : null; }
 
     public static String requireNonBlank(String value, String fieldName, int maxLength) {
         Objects.requireNonNull(value, fieldName + " is required");
@@ -45,7 +54,7 @@ public class PartDomainValidation {
     public static Integer requirePositiveQuantity(Integer value, String fieldName) {
         Objects.requireNonNull(value, fieldName + " is required");
 
-        if (value <= 0) {
+        if (value < 0) {
             throw new IllegalArgumentException(fieldName + " must be zero or greater");
         }
         return value;
@@ -62,5 +71,49 @@ public class PartDomainValidation {
             throw new IllegalArgumentException(fieldName + " must not exceed " + maxLength + " characters");
         }
         return value;
+    }
+
+    public static String requireCnpj(String value, String field, int maxLength) {
+
+        String normalized = requireNonBlank(value, field, maxLength);
+
+        if (!CNPJ_PATTERN.matcher(normalized).matches()) {
+            throw new IllegalArgumentException(field + " must contain exactly 14 digits ");
+        }
+        return normalized;
+    }
+
+    public static String requireEmail(String value, String field, int maxLength) {
+
+        String normalized = requireNonBlank(value, field, maxLength);
+
+        if (!EMAIL_PATTERN.matcher(normalized).matches()) {
+            throw new IllegalArgumentException(field + " must be a valid email");
+        }
+        return normalized;
+    }
+
+    public static String filterZipAndPhoneCharacters(String value) {
+        if (value == null) return null;
+
+        return value.replaceAll("\\D", "");
+    }
+
+    public static String sanitizeText(String value) {
+        if (value == null) return null;
+
+        return value
+                .replaceAll("\\s{2,}", " ")
+                .replaceAll("[^\\p{L}\\p{N}\\s\\-/]", "");
+    }
+
+    public static String requireCpf(String value, String field, int maxLength) {
+
+        String normalized = requireNonBlank(value, field, maxLength);
+
+        if (!CPF_PATTERN.matcher(normalized).matches()) {
+            throw new IllegalArgumentException(field + " must contain exactly 11 digits ");
+        }
+        return normalized;
     }
 }

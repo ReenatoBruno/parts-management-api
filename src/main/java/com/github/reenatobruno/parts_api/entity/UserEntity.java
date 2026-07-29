@@ -1,7 +1,7 @@
 package com.github.reenatobruno.parts_api.entity;
 
 import com.github.reenatobruno.parts_api.enums.UserRole;
-import com.github.reenatobruno.parts_api.util.UserDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,7 @@ public class UserEntity {
     private static final int MAX_NAME_LENGTH = 60;
     private static final int MAX_CPF_LENGTH = 11;
     private static final int MAX_EMAIL_LENGTH = 150;
+    private static final int MAX_PHONE_LENGTH = 11;
     private static final int MAX_PASSWORD_LENGTH = 255;
 
     @Id
@@ -40,11 +41,14 @@ public class UserEntity {
     @Column(name = "user_name", nullable = false, length = MAX_NAME_LENGTH)
     private String userName;
 
-    @Column(name = "user_cpf", nullable = false, unique = true, length = MAX_CPF_LENGTH)
+    @Column(name = "user_cpf", nullable = false, unique = true, length = 60)
     private String userCpf;
 
     @Column(name = "user_email", nullable = false, unique = true, length = MAX_EMAIL_LENGTH)
     private String userEmail;
+
+    @Column(name = "user_phone", nullable = false, length = MAX_PHONE_LENGTH)
+    private String userPhone;
 
     @Column(name = "user_password", nullable = false, length = MAX_PASSWORD_LENGTH)
     private String userPassword;
@@ -81,11 +85,12 @@ public class UserEntity {
     @Column(name = "user_updated_by", nullable = false)
     private String updatedBy;
 
-    public UserEntity(String userName, String userCpf, String userEmail, String userPassword) {
+    public UserEntity(String userName, String userCpf, String userEmail, String userPhone, String userPassword) {
 
         setUserName(userName);
         setUserCpf(userCpf);
         setUserEmail(userEmail);
+        setUserPhone(userPhone);
         setPassword(userPassword);
         this.userRole = UserRole.USER;
         this.accountNonBlocked = true;
@@ -100,16 +105,20 @@ public class UserEntity {
         return userName;
     }
 
+    public String getUserCpf() {
+        return userCpf;
+    }
+
     public String getUserEmail() {
         return userEmail;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public String getUserCpf() {
-        return userCpf;
+    public String getUserPassword() {
+        return userPassword;
     }
 
     public UserRole getUserRole() {
@@ -149,32 +158,45 @@ public class UserEntity {
     }
 
     private void setUserName(String userName) {
-        String normalizedUserName = UserDomainValidation.normalize(userName);
-        this.userName = UserDomainValidation.requireNonBlank(normalizedUserName, "User name", MAX_NAME_LENGTH);
+        String stripUserName = DomainValidation.normalize(userName);
+        this.userName = DomainValidation.requireNonBlank(stripUserName, "User name", MAX_NAME_LENGTH);
     }
 
     private void setUserCpf(String userCpf) {
-        String normalizedCpf = UserDomainValidation.normalize(userCpf);
-        this.userCpf = UserDomainValidation.requireCpf(normalizedCpf, "CPF", MAX_CPF_LENGTH);
+        String stripCpf = DomainValidation.normalize(userCpf);
+        this.userCpf = DomainValidation.requireCpf(stripCpf, "CPF", MAX_CPF_LENGTH);
     }
 
     private void setUserEmail(String userEmail) {
-        String normalizedEmail = UserDomainValidation.normalize(userEmail);
-        String lowerCaseEmail = normalizedEmail != null ? normalizedEmail.toLowerCase() : null;
-        this.userEmail = UserDomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
+        String stripEmail = DomainValidation.normalize(userEmail);
+        String lowerCaseEmail = DomainValidation.lowerCase(stripEmail);
+        this.userEmail = DomainValidation.requireEmail(lowerCaseEmail, "E-mail", MAX_EMAIL_LENGTH);
+    }
+
+    private void setUserPhone(String userPhone) {
+        String stripPhone = DomainValidation.normalize(userPhone);
+        String filterPhoneCharacters = DomainValidation.filterZipAndPhoneCharacters(stripPhone);
+        this.userPhone = DomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
     private void setPassword(String userPassword) {
-        this.userPassword = UserDomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
+        this.userPassword = DomainValidation.requireNonBlank(userPassword, "Password", MAX_PASSWORD_LENGTH);
     }
 
-    public void disable() {
+    public void deactivate() {
+
         this.accountEnabled = false;
+
+        String deletedSuffix = "_DELETED_" + UUID.randomUUID().toString();
+
+        this.userEmail = this.userEmail + deletedSuffix;
+        this.userCpf = this.userCpf + deletedSuffix;
     }
 
-    public void updateFields(String userName, String userEmail) {
-        setUserName(userName);
-        setUserEmail(userEmail);
+    public void updateFields(String userName, String userEmail, String userPhone) {
+       if (userName != null) setUserName(userName);
+       if (userEmail != null) setUserEmail(userEmail);
+       if (userPhone != null) setUserPhone(userPhone);
     }
 
     public void changePassword(String newEncodedPassword) {

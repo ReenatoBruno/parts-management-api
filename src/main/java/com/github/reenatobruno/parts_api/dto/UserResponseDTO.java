@@ -18,6 +18,9 @@ public record UserResponseDTO(
         @Schema(description = "Email address associated with the user account", example = "joao.silva@email.com")
         String userEmail,
 
+        @Schema(description = "Registered contact phone", example = "11999999999")
+        String userPhone,
+
         @Schema(description = "Date and time when the user account was created", example = "2026-06-21T14:30:00Z")
         Instant createdAt,
 

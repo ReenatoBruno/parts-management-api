@@ -25,8 +25,13 @@ public record UserRequestDTO(
         @Email
         @Size(max = 150)
         String userEmail,
+        @Schema(description = "Contact phone number", example = "11999999999")
+        @NotBlank(message = "{user.phone.notBlank}")
+        @Pattern(regexp = "^[0-9\\-\\s()]+$", message = "{user.phone.pattern}")
+        @Size(min = 10, max = 15, message = "{user.phone.size}")
+        String userPhone,
 
-        @Schema(description = "Password, must contain uppercase, lowercase, digit, special character, between 8 and 60 characters long", example = "Senha123!")
+        @Schema(description = "Password, must contain uppercase, lowercase, digit, special character, and at lest 8 characters long", example = "Senha123!")
         @NotBlank
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).+$", message = "Password must contain uppercase, lowercase, digit and special character")
         @Size(min = 8, max = 64)

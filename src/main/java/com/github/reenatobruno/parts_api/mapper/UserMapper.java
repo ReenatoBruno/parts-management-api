@@ -13,6 +13,7 @@ public class UserMapper {
                 requestDTO.userName(),
                 requestDTO.userCpf(),
                 requestDTO.userEmail(),
+                requestDTO.userPhone(),
                 encodedPassword
         );
     }
@@ -30,7 +31,8 @@ public class UserMapper {
     public void updateEntity (UserEntity user, UserUpdateDTO updateDTO) {
         user.updateFields(
                 updateDTO.userName(),
-                updateDTO.userEmail()
+                updateDTO.userEmail(),
+                updateDTO.userPhone()
         );
     }
 }

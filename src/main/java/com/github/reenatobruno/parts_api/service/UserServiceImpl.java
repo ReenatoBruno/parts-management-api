@@ -76,9 +76,18 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = findByUserId(userId);
 
+        if (updateDTO.userEmail() != null && !updateDTO.userEmail().equals(user.getUserEmail())) {
+
+            if (repository.existsByUserEmail(updateDTO.userEmail())) {
+                throw new UserEmailAlreadyExistsException(updateDTO.userEmail());
+            }
+        }
+
         mapper.updateEntity(user, updateDTO);
 
         UserEntity saveUser = repository.save(user);
+
+        log.info("User updated successfully for ID: {}", userId);
 
         return mapper.toResponse(saveUser);
     }
@@ -98,6 +107,8 @@ public class UserServiceImpl implements UserService {
         user.changePassword(encodedNewPassword);
 
         repository.save(user);
+
+        log.info("User password changed successfully for userId: {}", userId);
     }
 
     @Override
@@ -106,7 +117,13 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = findByUserId(userId);
 
-        user.disable();
+        if (!user.isAccountEnabled()) {
+            throw new UserAlreadyDeactivatedException();
+        }
+
+        user.deactivate();
+
+        log.info("User ID: {} was successfully deactivated.", userId);
 
         repository.save(user);
     }
