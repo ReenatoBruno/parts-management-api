@@ -1,6 +1,6 @@
 package com.github.reenatobruno.parts_api.entity;
 
-import com.github.reenatobruno.parts_api.util.DealershipDomainValidation;
+import com.github.reenatobruno.parts_api.util.DomainValidation;
 import com.github.reenatobruno.parts_api.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -132,31 +132,31 @@ public class DealershipEntity {
     }
 
     private void setCnpj(String cnpj) {
-        String stripCnpj = DealershipDomainValidation.normalize(cnpj);
-        this.cnpj = DealershipDomainValidation.requireCnpj(stripCnpj, "CNPJ", MAX_CNPJ_LENGTH);
+        String stripCnpj = DomainValidation.normalize(cnpj);
+        this.cnpj = DomainValidation.requireCnpj(stripCnpj, "CNPJ", MAX_CNPJ_LENGTH);
     }
     private void setDealerName(String dealerName) {
-        String stripDealerName = DealershipDomainValidation.normalize(dealerName);
+        String stripDealerName = DomainValidation.normalize(dealerName);
         String capitalized = StringUtils.capitalize(stripDealerName);
-        this.dealerName = DealershipDomainValidation.requireNonBlank(capitalized, "Dealer name", MAX_DEALER_NAME_LENGTH);
+        this.dealerName = DomainValidation.requireNonBlank(capitalized, "Dealer name", MAX_DEALER_NAME_LENGTH);
     }
 
     private void setTradeName(String tradeName) {
-        String stripTradeName = DealershipDomainValidation.normalize(tradeName);
+        String stripTradeName = DomainValidation.normalize(tradeName);
         String capitalized = StringUtils.capitalize(stripTradeName);
-        this.tradeName = DealershipDomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
+        this.tradeName = DomainValidation.requireNonBlank(capitalized, "Trade name", MAX_TRADE_NAME_LENGTH);
     }
 
     private void setEmail(String email) {
-        String stripEmail = DealershipDomainValidation.normalize(email);
-        String lowerCase =  DealershipDomainValidation.lowerCase(stripEmail);
-        this.email = DealershipDomainValidation.requireEmail(lowerCase, "E-mail", MAX_EMAIL_LENGTH);
+        String stripEmail = DomainValidation.normalize(email);
+        String lowerCase =  DomainValidation.lowerCase(stripEmail);
+        this.email = DomainValidation.requireEmail(lowerCase, "E-mail", MAX_EMAIL_LENGTH);
     }
 
     private void setPhone(String phone) {
-        String stripPhone = DealershipDomainValidation.normalize(phone);
-        String filterPhoneCharacters = DealershipDomainValidation.filterOnlyDigits(stripPhone);
-        this.phone = DealershipDomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
+        String stripPhone = DomainValidation.normalize(phone);
+        String filterPhoneCharacters = DomainValidation.filterZipAndPhoneCharacters(stripPhone);
+        this.phone = DomainValidation.requireNonBlank(filterPhoneCharacters, "Phone", MAX_PHONE_LENGTH);
     }
 
     public void deactivate() {this.active = false;}
