@@ -21,7 +21,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_parts",
 indexes = {
-        @Index(name = "idx_part_number", columnList = "part_number")
+        @Index(name = "idx_part_name", columnList = "part_name")
 })
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @SQLRestriction("part_active = true")
@@ -195,5 +195,4 @@ public class PartEntity {
         public int hashCode() {
                 return Objects.hash(partNumber);
         }
-
 }
