@@ -40,7 +40,7 @@ public record DealershipRequestDTO(
         @NotBlank(message = "{dealership.zip.notBlank}")
         @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "{dealership.zip.pattern}")
         @Size(max = 9, message = "{dealership.zip.size}")
-        String zip,
+        String zipCode,
 
         @Schema(description = "Street number", example = "1000A")
         @NotBlank(message = "{dealership.number.notBlank}")
