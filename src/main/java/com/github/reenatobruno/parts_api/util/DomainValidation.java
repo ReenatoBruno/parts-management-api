@@ -16,7 +16,7 @@ public class DomainValidation {
         return value != null ? value.strip() : null;
     }
 
-    public static String lowerCase(String value) { return value != null ? value.strip() : null; }
+    public static String lowerCase(String value) { return value != null ? value.toLowerCase() : null; }
 
     public static String upperCase(String value) { return value != null ? value.toUpperCase() : null; }
 
